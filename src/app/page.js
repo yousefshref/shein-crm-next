@@ -1,101 +1,188 @@
-import Image from "next/image";
+"use client";
+import DashboardLayout from "@/components/DashboardLayout";
+import CalendarDialog from "@/components/Order/CalendarDialog";
+import CreateOrUpdateOrder from "@/components/Order/CreateOrUpdateOrder";
+import OrdersSearchDialog from "@/components/Order/OrdersSearchDialog";
+import OrdersTruckDialog from "@/components/Order/OrdersTruckDialog";
+import { Progress } from "@/components/ui/progress";
+import { OrdersContextProvider } from "@/context/OrdersContext";
+import { Calendar, Plus, Search, Truck } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { UserContextProvider } from "./context/UserContext";
+import ChartsComponent from "@/components/ChartsComponent";
+import { toast } from "sonner";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const { is_seller, user } = useContext(UserContextProvider);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    if (!user) {
+      toast.error("You are not logged in");
+      window.location.href = "/login";
+    }
+  }, [user]);
+
+  const { open, setOpen, loading, progress, orders, setOrder } = useContext(
+    OrdersContextProvider
+  );
+
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
+  const [openTruck, setOpenTruck] = useState(false);
+
+  const [openCharts, setOpenCharts] = useState(false);
+
+  // dashboard
+  return (
+    <DashboardLayout>
+      <div
+        className={`relative flex flex-col transition-all duration-500 ${
+          open || openCalendar || openSearch || openTruck || openCharts
+            ? "scale-95"
+            : ""
+        }`}
+      >
+        {/* loading */}
+        {loading ? (
+          <div className="fixed w-full h-full left-0 top-0 transition-all duration-200 bg-black/30 z-50">
+            <Progress value={progress} />
+          </div>
+        ) : null}
+
+        {/* charts */}
+        <div
+          onClick={() => {
+            if (is_seller) {
+              toast.error("لا يمكنك الوصول لهذه الصفحة");
+            } else {
+              setOpenCharts(true);
+            }
+          }}
+          className="p-10 cursor-pointer bg-[#D9D9D9] rounded-xl flex flex-col items-center justify-center"
+        >
+          <p className="text-xl font-medium">التفاصيل بالرسم البياني</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <ChartsComponent open={openCharts} setOpen={setOpenCharts} />
+        {/* search */}
+        <div className="mt-14 flex gap-10 items-center">
+          <p className="text-[#6C85FF]">أبحث ب</p>
+          <div
+            onClick={() => setOpenCalendar(true)}
+            className="p-2 bg-[#6C85FF] cursor-pointer transition-all duration-300 hover:bg-[#788fff] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
+          >
+            <Calendar className="w-full" />
+          </div>
+          <CalendarDialog open={openCalendar} setOpen={setOpenCalendar} />
+          <div
+            onClick={() => setOpenSearch(true)}
+            className="p-2 bg-[#6C85FF] cursor-pointer transition-all duration-300 hover:bg-[#788fff] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
+          >
+            <Search className="w-full" />
+          </div>
+          <OrdersSearchDialog open={openSearch} setOpen={setOpenSearch} />
+          <div
+            onClick={() => setOpenTruck(true)}
+            className="p-2 bg-[#6C85FF] cursor-pointer transition-all duration-300 hover:bg-[#788fff] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
+          >
+            <Truck className="w-full" />
+          </div>
+          <OrdersTruckDialog open={openTruck} setOpen={setOpenTruck} />
+        </div>
+        {/* order details */}
+        <div className="mt-14 items-start gap-10 grid grid-cols-3">
+          <div className="col-span-1 flex flex-col">
+            <p className="text-[#6C85FF]">عدد الطلبات</p>
+            <p className="text-zinc-500 text-sm mt-1">40</p>
+          </div>
+          {is_seller ? null : (
+            <>
+              <div className="col-span-1 flex flex-col">
+                <p className="text-[#6C85FF]">مجموع الطلبات</p>
+                <p className="text-zinc-500 text-sm mt-1">230,000 جنية</p>
+                <p className="text-zinc-500 text-sm">100,000 ريال</p>
+              </div>
+              <div className="col-span-1 flex flex-col">
+                <p className="text-[#6C85FF]">مجموع الارباح</p>
+                <p className="text-zinc-500 text-sm mt-1">50,000 ريال</p>
+                <p className="text-zinc-500 text-sm">100,000 جنية</p>
+              </div>
+            </>
+          )}
+        </div>
+        {/* order create order */}
+        <div
+          onClick={() => setOpen(true)}
+          className="mt-14 bg-[#71ff6c] cursor-pointer transition-all duration-300 hover:bg-[#57ff51] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Plus className="w-full" />
+        </div>
+        <CreateOrUpdateOrder />
+        {/* orders list */}
+        <div className="mt-5 flex flex-col gap-5">
+          <div
+            className={`${
+              is_seller ? "grid grid-cols-4" : "grid grid-cols-6"
+            } gap-10 md:text-sm text-xs font-bold`}
+          >
+            <p className="col-span-1">اسم العميل</p>
+            <p className="col-span-1">حالة الطلب</p>
+            {is_seller ? null : (
+              <>
+                <p className="col-span-1">إجمالي المبيعات</p>
+                <p className="col-span-1">إجمالي الربح</p>
+              </>
+            )}
+            <p className="col-span-1">ثمن الشحن</p>
+            <p className="col-span-1">التاريخ</p>
+          </div>
+          {orders?.map((order) => (
+            <div
+              key={order?.id}
+              className={`${
+                is_seller ? "grid grid-cols-4" : "grid grid-cols-6"
+              } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
+              onClick={() => {
+                setOpen(true);
+                setOrder(order);
+              }}
+            >
+              <p className="col-span-1">{order?.customer_name}</p>
+              <p className="col-span-1">{order?.order_status_name}</p>
+              {is_seller ? null : (
+                <>
+                  <p className="col-span-1 flex flex-col">
+                    <span className="grid grid-cols-2">
+                      <span>{order?.total_order_in_eg}</span>
+                      <span>EGP</span>
+                    </span>
+                    <span className="grid grid-cols-2">
+                      <span>{order?.total_order_in_sar}</span>
+                      <span>SAR</span>
+                    </span>
+                  </p>
+                  <p className="col-span-1 flex flex-col">
+                    <span className="grid grid-cols-2">
+                      <span>{order?.total_order_profit_in_eg}</span>
+                      <span>EGP</span>
+                    </span>
+                    <span className="grid grid-cols-2">
+                      <span>{order?.total_order_profit_in_sar}</span>
+                      <span>SAR</span>
+                    </span>
+                  </p>
+                </>
+              )}
+              <p className="col-span-1 flex flex-col">
+                <span className="grid grid-cols-2">
+                  <span>{order?.shipping_cost}</span>
+                  <span>SAR</span>
+                </span>
+              </p>
+              <p className="col-span-1">{order?.date}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </DashboardLayout>
   );
 }

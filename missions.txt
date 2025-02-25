@@ -1,0 +1,27 @@
+- login ✅
+
+- create order ✅
+- display orders ✅
+- filter orders ✅
+- update ✅ / delete orders ✅
+
+- CRUD employees ✅
+- CRUD shipping couriers ✅
+- CRUD Order Statuses ✅
+
+- login as an employee ✅
+
+- charts
+    - click on charts bar ✅
+    - open modal that takes all screen size ✅
+    - get the same data of the orders and add it in the charts (USE GPT FOR FAST PROCESS) ✅ (fuck GPT... It slowed down the proccess and i did it manually Lol)
+
+
+
+---------------------------------------------------------------------------
+- CLICK ON A RAW ✅
+- SET THE ORDER TO THE "ORDER" ✅
+- UPDATE THE CREATEORUPDATE COMPONENT ✅
+- UPDATE THE FIELDS ✅
+- CREATE UPDATE FUNCTION IN FRONT END ✅
+- CLICK ON THE BUTTON ✅
