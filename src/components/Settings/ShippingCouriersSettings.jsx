@@ -71,7 +71,11 @@ const ShippingCouriersSettings = () => {
                     loading ? (
                         <div className=''>Loading...</div>
                     ) :
-                        shippingCouriers?.length == 0 ? null :
+                        shippingCouriers?.length == 0 ? (
+                            <div className='col-span-4 text-center text-xl text-yellow-700 p-5 bg-yellow-100 rounded-xl'>
+                                لا يوجد شركات شحن
+                            </div>
+                        ) :
                             shippingCouriers?.map((shipping, index) => {
                                 return (
                                     <div

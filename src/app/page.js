@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContextProvider } from "./context/UserContext";
 import ChartsComponent from "@/components/ChartsComponent";
 import { toast } from "sonner";
+import { formatNumber } from "@/lib/utils";
 
 export default function Home() {
   const { is_seller, user } = useContext(UserContextProvider);
@@ -31,6 +32,30 @@ export default function Home() {
   const [openTruck, setOpenTruck] = useState(false);
 
   const [openCharts, setOpenCharts] = useState(false);
+
+  const [totalOrdersCount, setTotalOrdersCount] = useState(0);
+  const [totalOrdersSAR, setTotalOrdersSAR] = useState(0);
+  const [totalOrdersEGP, setTotalOrdersEGP] = useState(0);
+  const [totalOrdersProfitSAR, setTotalOrdersProfitSAR] = useState(0);
+  const [totalOrdersProfitEGP, setTotalOrdersProfitEGP] = useState(0);
+
+  useEffect(() => {
+    if (orders?.length > 0) {
+      setTotalOrdersCount(orders.length);
+      setTotalOrdersSAR(
+        orders.reduce((acc, order) => acc + order.total_order_in_sar, 0)
+      );
+      setTotalOrdersEGP(
+        orders.reduce((acc, order) => acc + order.total_order_in_eg, 0)
+      );
+      setTotalOrdersProfitSAR(
+        orders.reduce((acc, order) => acc + order.total_order_profit_in_sar, 0)
+      );
+      setTotalOrdersProfitEGP(
+        orders.reduce((acc, order) => acc + order.total_order_profit_in_eg, 0)
+      );
+    }
+  }, [orders]);
 
   // dashboard
   return (
@@ -92,19 +117,29 @@ export default function Home() {
         <div className="mt-14 items-start gap-10 grid grid-cols-3">
           <div className="col-span-1 flex flex-col">
             <p className="text-[#6C85FF]">عدد الطلبات</p>
-            <p className="text-zinc-500 text-sm mt-1">40</p>
+            <p className="text-zinc-500 text-sm mt-1">
+              {formatNumber(totalOrdersCount)}
+            </p>
           </div>
           {is_seller ? null : (
             <>
               <div className="col-span-1 flex flex-col">
                 <p className="text-[#6C85FF]">مجموع الطلبات</p>
-                <p className="text-zinc-500 text-sm mt-1">230,000 جنية</p>
-                <p className="text-zinc-500 text-sm">100,000 ريال</p>
+                <p className="text-zinc-500 text-sm mt-1">
+                  {formatNumber(totalOrdersEGP)} جنية
+                </p>
+                <p className="text-zinc-500 text-sm">
+                  {formatNumber(totalOrdersSAR)} ريال
+                </p>
               </div>
               <div className="col-span-1 flex flex-col">
                 <p className="text-[#6C85FF]">مجموع الارباح</p>
-                <p className="text-zinc-500 text-sm mt-1">50,000 ريال</p>
-                <p className="text-zinc-500 text-sm">100,000 جنية</p>
+                <p className="text-zinc-500 text-sm">
+                  {formatNumber(totalOrdersProfitEGP)} جنية
+                </p>
+                <p className="text-zinc-500 text-sm mt-1">
+                  {formatNumber(totalOrdersProfitSAR)} ريال
+                </p>
               </div>
             </>
           )}
@@ -152,21 +187,25 @@ export default function Home() {
                 <>
                   <p className="col-span-1 flex flex-col">
                     <span className="grid grid-cols-2">
-                      <span>{order?.total_order_in_eg}</span>
+                      <span>{formatNumber(order?.total_order_in_eg)}</span>
                       <span>EGP</span>
                     </span>
                     <span className="grid grid-cols-2">
-                      <span>{order?.total_order_in_sar}</span>
+                      <span>{formatNumber(order?.total_order_in_sar)}</span>
                       <span>SAR</span>
                     </span>
                   </p>
                   <p className="col-span-1 flex flex-col">
                     <span className="grid grid-cols-2">
-                      <span>{order?.total_order_profit_in_eg}</span>
+                      <span>
+                        {formatNumber(order?.total_order_profit_in_eg)}
+                      </span>
                       <span>EGP</span>
                     </span>
                     <span className="grid grid-cols-2">
-                      <span>{order?.total_order_profit_in_sar}</span>
+                      <span>
+                        {formatNumber(order?.total_order_profit_in_sar)}
+                      </span>
                       <span>SAR</span>
                     </span>
                   </p>
@@ -174,7 +213,7 @@ export default function Home() {
               )}
               <p className="col-span-1 flex flex-col">
                 <span className="grid grid-cols-2">
-                  <span>{order?.shipping_cost}</span>
+                  <span>{formatNumber(order?.shipping_cost)}</span>
                   <span>SAR</span>
                 </span>
               </p>

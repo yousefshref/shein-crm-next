@@ -70,7 +70,7 @@ const OrdersTruckDialog = ({ open, setOpen }) => {
                 {/* content */}
                 <div className='flex flex-col gap-5'>
                     <div className='flex flex-col gap-1'>
-                        <p className='text-gray-500 text-sm'>سيلز معين</p>
+                        <p className='text-gray-500 text-sm'>اسم الشركة</p>
                         <select value={shipping_courier_param} onChange={(e) => setShippingCourier_param(e.target.value)} className='input-primary'>
                             <option value="">جميع الطبات</option>
                             {shipping_couriers?.map((shipping_courier) => (

@@ -14,9 +14,11 @@ import { Input } from '../ui/input'
 import axios from 'axios'
 import { server } from '@/app/server'
 import { Trash } from 'lucide-react'
+import { UserContextProvider } from '@/app/context/UserContext'
 
 
 const CreateOrUpdateOrder = () => {
+    const { is_seller } = useContext(UserContextProvider)
     const {
         open, setOpen,
 
@@ -203,30 +205,38 @@ const CreateOrUpdateOrder = () => {
                     <div className="mt-10">
                         <h2 className="font-bold text-right text-blue-500">التفاصيل المالية</h2>
                         <div className="grid grid-cols-2 gap-4 mt-2">
-                            <div className="flex flex-col gap-1">
-                                <p>مجموع الطلبات بالريال</p>
-                                <Input type="number" onChange={(e) => setTotalOrderInSar(e.target.value)} value={total_order_in_sar} className="bg-gray-50" />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p>مجموع الطلبات بالجنيه</p>
-                                <Input type="number" onChange={(e) => setTotalOrderInEg(e.target.value)} value={total_order_in_eg} className="bg-gray-50" />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p>مجموع الأرباح بالريال</p>
-                                <Input type="number" onChange={(e) => setTotalOrderProfitInSar(e.target.value)} value={total_order_profit_in_sar} className="bg-gray-50" />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p>مجموع الأرباح بالجنيه</p>
-                                <Input type="number" onChange={(e) => setTotalOrderProfitInEg(e.target.value)} value={total_order_profit_in_eg} className="bg-gray-50" />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p>المدفوع</p>
-                                <Input type="number" onChange={(e) => setPaid(e.target.value)} value={paid} className="bg-gray-50" />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p>المتبقي</p>
-                                <Input type="number" onChange={(e) => setRemain(e.target.value)} value={remain} className="bg-gray-50" />
-                            </div>
+                            {is_seller ? (
+                                <div className='p-2 px-5 rounded-xl bg-yellow-100 text-yellow-600 mt-2'>
+                                    <p>ليس لديك صلاحية لهذه الخانات</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="flex flex-col gap-1">
+                                        <p>مجموع الطلبات بالريال</p>
+                                        <Input type="number" onChange={(e) => setTotalOrderInSar(e.target.value)} value={total_order_in_sar} className="bg-gray-50" />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <p>مجموع الطلبات بالجنيه</p>
+                                        <Input type="number" onChange={(e) => setTotalOrderInEg(e.target.value)} value={total_order_in_eg} className="bg-gray-50" />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <p>مجموع الأرباح بالريال</p>
+                                        <Input type="number" onChange={(e) => setTotalOrderProfitInSar(e.target.value)} value={total_order_profit_in_sar} className="bg-gray-50" />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <p>مجموع الأرباح بالجنيه</p>
+                                        <Input type="number" onChange={(e) => setTotalOrderProfitInEg(e.target.value)} value={total_order_profit_in_eg} className="bg-gray-50" />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <p>المدفوع</p>
+                                        <Input type="number" onChange={(e) => setPaid(e.target.value)} value={paid} className="bg-gray-50" />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <p>المتبقي</p>
+                                        <Input type="number" onChange={(e) => setRemain(e.target.value)} value={remain} className="bg-gray-50" />
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
 

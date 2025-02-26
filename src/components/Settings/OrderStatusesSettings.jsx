@@ -72,7 +72,11 @@ const OrderStatusesSettings = () => {
                     loading ? (
                         <div className=''>Loading...</div>
                     ) :
-                        orderStatuses?.length == 0 ? null :
+                        orderStatuses?.length == 0 ? (
+                            <div className='col-span-4 text-center text-xl text-yellow-700 p-5 bg-yellow-100 rounded-xl'>
+                                لا يوجد حالات
+                            </div>
+                        ) :
                             orderStatuses?.map((status, index) => {
                                 return (
                                     <div

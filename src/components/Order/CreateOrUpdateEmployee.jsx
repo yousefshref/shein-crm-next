@@ -57,12 +57,12 @@ const CreateOrUpdateEmployee = ({ open, setOpen, employee, deleteEmployee, getEm
             <DrawerContent>
                 <DrawerHeader className={'flex items-center flex-row w-full'}>
                     <DrawerTitle className={'text-end font-bold text-xl'}>
-                        إضافه طلب جديد
+                        {employee?.id ? 'تعديل موظف' : 'إضافه موظف جديد'}
                     </DrawerTitle>
                     {employee?.id ? (
-                        null
-                    ) : (
                         <Trash onClick={() => deleteEmployee(employee?.id)} size={35} className='p-2 ms-auto rounded-md bg-red-500 text-white transition-all duration-200 hover:bg-red-400 cursor-pointer' />
+                    ) : (
+                        null
                     )}
                 </DrawerHeader>
                 {/* content */}
