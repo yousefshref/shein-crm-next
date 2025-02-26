@@ -14,7 +14,7 @@ import axios from 'axios'
 import { toast } from 'sonner'
 
 
-const CreateOrUpdateShippingCourier = ({ deleteShippingCourier, open, setOpen, shippingCourier, getShippingCouriers }) => {
+const CreateOrUpdateShippingCourier = ({ deleteShippingCourier, open, setOpen, shippingCourier, getShippingCouriers, setShippingCouriers }) => {
     // create
     const [loading, setLoading] = React.useState(false)
 
@@ -28,6 +28,7 @@ const CreateOrUpdateShippingCourier = ({ deleteShippingCourier, open, setOpen, s
             toast.success('Shipping Courier created successfully')
             setName('')
             setOpen(false)
+            setShippingCouriers(prev => [...prev, res.data])
         } catch (error) {
             console.error(error)
             toast.error('Error creating Shipping Courier')

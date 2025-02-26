@@ -14,7 +14,7 @@ import axios from 'axios'
 import { toast } from 'sonner'
 
 
-const CreateOrUpdateOrderStatuses = ({ deleteOrderStatus, open, setOpen, orderStatus, getOrderStatus }) => {
+const CreateOrUpdateOrderStatuses = ({ setOrderStatuses, deleteOrderStatus, open, setOpen, orderStatus, getOrderStatus }) => {
     // create
     const [loading, setLoading] = React.useState(false)
 
@@ -28,6 +28,7 @@ const CreateOrUpdateOrderStatuses = ({ deleteOrderStatus, open, setOpen, orderSt
             toast.success('Order Status created successfully')
             setName('')
             setOpen(false)
+            setOrderStatuses(prev => [...prev, res.data])
         } catch (error) {
             console.error(error)
             toast.error('Error creating Order Status')

@@ -65,7 +65,7 @@ const OrderStatusesSettings = () => {
                 }} className='bg-[#51FF65] hover:bg-[#60ff72] text-white text-xl p-0.5 rounded-md flex flex-col justify-center items-center'>
                     <Plus />
                 </button>
-                <CreateOrUpdateOrderStatuses deleteOrderStatus={deleteOrderStatus} getOrderStatus={getOrderStatuses} orderStatus={orderStatus} open={open} setOpen={setOpen} />
+                <CreateOrUpdateOrderStatuses setOrderStatuses={setOrderStatuses} deleteOrderStatus={deleteOrderStatus} getOrderStatus={getOrderStatuses} orderStatus={orderStatus} open={open} setOpen={setOpen} />
             </div>
             <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 items-center gap-7'>
                 {
