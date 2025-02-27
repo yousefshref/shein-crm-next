@@ -60,7 +60,9 @@ const ChartsComponent = ({ open, setOpen }) => {
         }
     }
     useEffect(() => {
-        getData()
+        if (open) {
+            getData()
+        }
     }, [date_from, date_to, sales_id, customer_number, order_status, is_collected, year])
 
 

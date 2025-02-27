@@ -70,3 +70,12 @@
 .input-primary {
   @apply p-1.5 px-3 bg-gray-100 rounded-md;
 }
+.input-white {
+  @apply p-1.5 px-3 bg-white rounded-md;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

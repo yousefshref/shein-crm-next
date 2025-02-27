@@ -28,7 +28,7 @@ const CreateOrUpdateOrder = () => {
         customer_wp, setCustomerWp,
         // shipping details
         shipping_courier, setShippingCourier,
-        shipping_cost, setShippingCost,
+        shipping_cost_in_egp, setShippingCostInEGP,
         order_status, setOrderStatus,
         address, setAddress,
         // money details
@@ -177,7 +177,7 @@ const CreateOrUpdateOrder = () => {
                                     </select>
                                 </div>
                                 <div className="relative">
-                                    <Input type="number" onChange={(e) => setShippingCost(e.target.value)} value={shipping_cost} placeholder="تكلفه الشحن" className="bg-gray-50 pl-12" />
+                                    <Input type="number" onChange={(e) => setShippingCostInEGP(e.target.value)} value={shipping_cost_in_egp} placeholder="تكلفه الشحن" className="bg-gray-50 pl-12" />
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">EGP</span>
                                 </div>
                             </div>

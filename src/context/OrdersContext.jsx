@@ -1,7 +1,7 @@
 'use client'
 import { server } from '@/app/server'
 import axios from 'axios'
-import React, { createContext, useEffect } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 const OrdersContext = ({ children }) => {
@@ -20,50 +20,30 @@ const OrdersContext = ({ children }) => {
 
     const [orders, setOrders] = React.useState([])
 
-    // search params
-    const today = new Date();
-    const date_from = new Date();
-    date_from.setDate(today.getDate() - 7);
+    const [ordersParams, setOrdersParams] = useState({
+        sales_id: '',
+        customer_name: '',
+        customer_number: '',
+        is_delivered: '',
+        is_collected: '',
+    })
 
-    const date_to = today;
-
-    const formatDate = (date) =>
-        `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-
-    const [date_from_str, setDateFrom] = React.useState(formatDate(date_from));
-    const [date_to_str, setDateTo] = React.useState(formatDate(date_to));
-
-    const [sales_id, setSalesId] = React.useState('')
-    const [customer_name_param, setCustomerName_param] = React.useState('')
-    const [customer_phone_param, setCustomerPhone_param] = React.useState('')
-    const [customer_wp_param, setCustomerWp_param] = React.useState('')
-
-    const [order_status_param, setOrderStatus_param] = React.useState('')
-    const [shipping_courier_param, setShippingCourier_param] = React.useState('')
-    const [is_collected_param, setIsCollected_param] = React.useState('')
+    const updateOrdersParams = (key, value) => {
+        setOrdersParams({ ...ordersParams, [key]: value })
+    }
 
     const getOrders = async () => {
         setLoading(true)
         try {
             const res = await axios.get(`${server}orders/`, {
-                params: {
-                    date_from: date_from_str,
-                    date_to: date_to_str,
-
-                    sales_id: sales_id,
-                    customer_name: customer_name_param,
-                    customer_phone: customer_phone_param,
-                    customer_wp: customer_wp_param,
-
-                    order_status: order_status_param,
-                    shipping_courier: shipping_courier_param,
-                    is_collected: is_collected_param,
-                },
+                params: ordersParams,
                 headers: {
                     Authorization: `Token ${localStorage.getItem('token')}`
                 }
             })
             setOrders(res.data)
+            console.log('orders', res.data);
+
         } catch (error) {
             alert(error.response.status)
             console.error(error)
@@ -75,11 +55,6 @@ const OrdersContext = ({ children }) => {
             setLoading(false)
         }
     }
-
-    const allowedPathes = ['/']
-    useEffect(() => {
-        if (allowedPathes.includes(window.location.pathname)) getOrders()
-    }, [date_from_str, date_to_str])
 
 
     // data
@@ -97,7 +72,7 @@ const OrdersContext = ({ children }) => {
     const [remain, setRemain] = React.useState(0)
     const [is_collected, setIsCollected] = React.useState(false)
     const [address, setAddress] = React.useState('')
-    const [shipping_cost, setShippingCost] = React.useState(0)
+    const [shipping_cost_in_egp, setShippingCostInEGP] = React.useState(0)
 
     const createOrder = async () => {
         setProgress(10)
@@ -118,7 +93,7 @@ const OrdersContext = ({ children }) => {
                 remain,
                 is_collected,
                 address,
-                shipping_cost,
+                shipping_cost_in_egp,
             }, {
                 headers: {
                     Authorization: `Token ${localStorage.getItem('token')}`
@@ -143,7 +118,7 @@ const OrdersContext = ({ children }) => {
             setRemain(0);
             setIsCollected(false);
             setAddress('');
-            setShippingCost(0);
+            setShippingCostInEGP(0);
 
         } catch (error) {
             console.error(error)
@@ -166,7 +141,7 @@ const OrdersContext = ({ children }) => {
             setCustomerPhone(order?.customer_phone || '');
             setCustomerWp(order?.customer_wp || '');
             setShippingCourier(order?.shipping_courier || '');
-            setShippingCost(order?.shipping_cost || 0);
+            setShippingCostInEGP(order?.shipping_cost_in_egp || 0);
             setOrderStatus(order?.order_status || '');
             setAddress(order?.address || '');
             setTotalOrderInSar(order?.total_order_in_sar || 0);
@@ -200,7 +175,7 @@ const OrdersContext = ({ children }) => {
                 remain,
                 is_collected,
                 address,
-                shipping_cost,
+                shipping_cost_in_egp,
             }, {
                 headers: {
                     Authorization: `Token ${localStorage.getItem('token')}`
@@ -225,7 +200,7 @@ const OrdersContext = ({ children }) => {
             setRemain(0);
             setIsCollected(false);
             setAddress('');
-            setShippingCost(0);
+            setShippingCostInEGP(0);
 
         } catch (error) {
             console.error(error)
@@ -271,7 +246,7 @@ const OrdersContext = ({ children }) => {
             customer_wp, setCustomerWp,
             // shipping details
             shipping_courier, setShippingCourier,
-            shipping_cost, setShippingCost,
+            shipping_cost_in_egp, setShippingCostInEGP,
             order_status, setOrderStatus,
             address, setAddress,
             // money details
@@ -286,21 +261,10 @@ const OrdersContext = ({ children }) => {
             loading,
             progress,
 
-            // search date
-            date_from_str, setDateFrom,
-            date_to_str, setDateTo,
-            // search basic info
-            sales_id, setSalesId,
-            customer_name_param, setCustomerName_param,
-            customer_phone_param, setCustomerPhone_param,
-            customer_wp_param, setCustomerWp_param,
-            // search shipping details
-            order_status_param, setOrderStatus_param,
-            shipping_courier_param, setShippingCourier_param,
-            is_collected_param, setIsCollected_param,
 
             orders,
-
+            ordersParams, setOrdersParams,
+            updateOrdersParams,
             getOrders,
 
             createOrder,
