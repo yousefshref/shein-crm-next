@@ -105,6 +105,7 @@ const OrdersSection = ({ page, setPage }) => {
                     <p className="col-span-1">Bag</p>
                     <p className="col-span-1">Customer name</p>
                     <p className="col-span-1">He Should Pay</p>
+                    <p className="col-span-1">Pieces Count</p>
                     {is_seller ? null : (
                         <>
                             <p className="col-span-1">Paid</p>
@@ -135,6 +136,7 @@ const OrdersSection = ({ page, setPage }) => {
                                     {formatNumber(order?.pieces?.reduce((total, piece) => total + Number(piece?.price_in_sar), 0))} EGP
                                 </span>
                             </p>
+                            <p className="col-span-1">{order?.how_many_pices || order?.pieces?.length}</p>
                             {is_seller ? null : (
                                 <>
                                     <p className="col-span-1 flex flex-col">
