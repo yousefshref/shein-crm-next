@@ -99,7 +99,7 @@ const OrdersSection = ({ page, setPage }) => {
             {/* orders list */}
             <div className="mt-20 flex flex-col gap-5">
                 <div
-                    className={`${is_seller ? "grid grid-cols-5" : "grid grid-cols-7"
+                    className={`${is_seller ? "grid grid-cols-6" : "grid grid-cols-8"
                         } gap-10 md:text-sm text-xs font-bold`}
                 >
                     <p className="col-span-1">Bag</p>
@@ -123,7 +123,7 @@ const OrdersSection = ({ page, setPage }) => {
                     orders?.map((order) => (
                         <div
                             key={order?.id}
-                            className={`${is_seller ? "grid grid-cols-5" : "grid grid-cols-7"
+                            className={`${is_seller ? "grid grid-cols-6" : "grid grid-cols-8"
                                 } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
                         >
                             <p className="col-span-1">{order?.bag_name}</p>
