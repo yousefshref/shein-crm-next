@@ -9,7 +9,6 @@ import CreateOrUpdateBag from "@/components/Bag/CreateOrUpdateBag";
 import { UserContextProvider } from '@/app/context/UserContext';
 import SearchSection from '../SearchSection';
 import BagsOrdersPagesChanger from '../BagsOrdersPagesChanger';
-import ChartsComponent from '../ChartsComponent';
 import ChartsSection from '../ChartsSection';
 
 
@@ -17,7 +16,7 @@ const BagsSection = ({ page, setPage }) => {
     const { is_seller } = useContext(UserContextProvider);
 
 
-    const { loading, progress, open, setOpen, bags, getBag } =
+    const { loading, progress, open, setOpen, bags, setBagDetails, getBag, setOrdersDetails } =
         useContext(BagContextProvider);
 
     const [openCalendar, setOpenCalendar] = useState(false);
@@ -122,7 +121,27 @@ const BagsSection = ({ page, setPage }) => {
             </div>
             {/* order create order */}
             <div
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                    setOpen(true)
+                    setBagDetails(
+                        {
+                            name: '',
+                            date: '',
+                            weight: 0,
+                            shipping_company: '',
+                            shipping_cost_in_egp: 0,
+                            shipping_cost_in_sar: 0,
+                            price_in_egp: 0,
+                            price_in_sar: 0,
+                            profit_in_egp: 0,
+                            profit_in_sar: 0,
+                            xg: '',
+                            discount_in_egp: 0,
+                            discount_in_sar: 0,
+                        }
+                    )
+                    setOrdersDetails([])
+                }}
                 className="mt-14 bg-[#71ff6c] cursor-pointer transition-all duration-300 hover:bg-[#57ff51] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
             >
                 <Plus className="w-full" />

@@ -8,14 +8,14 @@ const BagsOrdersPagesChanger = ({ page, setPage }) => {
                     setPage('bags')
                 }}
                 className={`cursor-pointer transition-all p-2 rounded-xl ${page == 'bags' ? "bg-blue-500 text-white" : "bg-blue-200 text-zinc-700"}`}>
-                Bags
+                Orders
             </div>
             <div
                 onClick={() => {
                     setPage('orders')
                 }}
                 className={`cursor-pointer transition-all p-2 rounded-xl ${page == 'bags' ? "bg-blue-200 text-zinc-700" : "bg-blue-500 text-white"}`}>
-                Orders
+                Clients
             </div>
         </div>
     )

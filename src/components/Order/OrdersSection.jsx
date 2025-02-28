@@ -16,7 +16,7 @@ const OrdersSection = ({ page, setPage }) => {
     const { is_seller } = useContext(UserContextProvider);
 
 
-    const { loading, progress, open, setOpen, orders, setOrders, getOrders } =
+    const { loading, progress, open, setOpen, orders, setOrders, getOrders, fastUpdateOrder, setIsDelivered, updateOrder } =
         useContext(OrdersContextProvider);
 
     useEffect(() => {
@@ -24,8 +24,6 @@ const OrdersSection = ({ page, setPage }) => {
             getOrders()
         }
     }, [page])
-
-    console.log(orders);
 
 
     const [openCalendar, setOpenCalendar] = useState(false);
@@ -67,7 +65,7 @@ const OrdersSection = ({ page, setPage }) => {
             {/* order details */}
             <div className="mt-20 items-start gap-10 grid grid-cols-3">
                 <div className="col-span-1 flex flex-col">
-                    <p className="text-[#6C85FF]">Total Orders</p>
+                    <p className="text-[#6C85FF]">Total Clients</p>
                     <p className="text-zinc-500 text-sm mt-1">
                         {formatNumber(orders?.length)}
                     </p>
@@ -79,10 +77,7 @@ const OrdersSection = ({ page, setPage }) => {
                             <p className="text-zinc-500 text-sm mt-1 grid grid-cols-2">
                                 <span>
                                     {formatNumber(
-                                        orders?.reduce(
-                                            (total, bag) => total + Number(bag?.price_in_egp),
-                                            0
-                                        )
+                                        orders?.map((order) => order?.pieces)?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0)
                                     )}
                                 </span>
                                 <span>EGP</span>
@@ -90,35 +85,7 @@ const OrdersSection = ({ page, setPage }) => {
                             <p className="text-zinc-500 text-sm grid grid-cols-2">
                                 <span>
                                     {formatNumber(
-                                        orders?.reduce(
-                                            (total, bag) => total + Number(bag?.price_in_sar),
-                                            0
-                                        )
-                                    )}
-                                </span>
-                                <span>SAR</span>
-                            </p>
-                        </div>
-                        <div className="col-span-1 flex flex-col">
-                            <p className="text-[#6C85FF]">Total Orders Profit</p>
-                            <p className="text-zinc-500 text-sm grid grid-cols-2">
-                                <span>
-                                    {formatNumber(
-                                        orders?.reduce(
-                                            (total, bag) => total + Number(bag?.profit_in_egp),
-                                            0
-                                        )
-                                    )}
-                                </span>
-                                <span>EGP</span>
-                            </p>
-                            <p className="text-zinc-500 text-sm grid grid-cols-2 mt-1">
-                                <span>
-                                    {formatNumber(
-                                        orders?.reduce(
-                                            (total, bag) => total + Number(bag?.profit_in_sar),
-                                            0
-                                        )
+                                        orders?.map((order) => order?.pieces)?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0)
                                     )}
                                 </span>
                                 <span>SAR</span>
@@ -137,56 +104,66 @@ const OrdersSection = ({ page, setPage }) => {
                 >
                     <p className="col-span-1">Bag</p>
                     <p className="col-span-1">Customer name</p>
-                    <p className="col-span-1">Customer number</p>
+                    <p className="col-span-1">He Should Pay</p>
                     {is_seller ? null : (
                         <>
                             <p className="col-span-1">Paid</p>
-                            <p className="col-span-1">Remaining</p>
                         </>
                     )}
                     <p className="col-span-1">Is Delivered</p>
                     <p className="col-span-1">Is Collected</p>
+                    <p className="col-span-1">Date</p>
                 </div>
                 {orders?.length == 0 ? (
                     <div className="p-3 px-4 col-span-7 bg-yellow-100 text-yellow-500 text-lg">
                         <p>No Orders</p>
                     </div>
                 ) : (
-                    orders?.map((bag) => (
+                    orders?.map((order) => (
                         <div
-                            key={bag?.id}
+                            key={order?.id}
                             className={`${is_seller ? "grid grid-cols-5" : "grid grid-cols-7"
                                 } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
                         >
-                            <p className="col-span-1">{bag?.bag_name}</p>
-                            <p className="col-span-1">{bag?.customer_name}</p>
-                            <p className="col-span-1">{bag?.customer_number}</p>
+                            <p className="col-span-1">{order?.bag_name}</p>
+                            <p className="col-span-1">{order?.customer_name}</p>
+                            <p className="col-span-1 flex flex-col">
+                                <span>
+                                    {formatNumber(order?.pieces?.reduce((total, piece) => total + Number(piece?.price_in_egp), 0))} EGP
+                                </span>
+                                <span>
+                                    {formatNumber(order?.pieces?.reduce((total, piece) => total + Number(piece?.price_in_sar), 0))} EGP
+                                </span>
+                            </p>
                             {is_seller ? null : (
                                 <>
                                     <p className="col-span-1 flex flex-col">
                                         <span className="grid grid-cols-2">
-                                            <span>{formatNumber(bag?.paid_in_egp)}</span>
+                                            <span>{formatNumber(order?.paid_in_egp)}</span>
                                             <span>EGP</span>
                                         </span>
                                         <span className="grid grid-cols-2">
-                                            <span>{formatNumber(bag?.paid_in_sar)}</span>
-                                            <span>SAR</span>
-                                        </span>
-                                    </p>
-                                    <p className="col-span-1 flex flex-col">
-                                        <span className="grid grid-cols-2">
-                                            <span>{formatNumber(bag?.remaining_in_egp)}</span>
-                                            <span>EGP</span>
-                                        </span>
-                                        <span className="grid grid-cols-2">
-                                            <span>{formatNumber(bag?.remaining_in_sar)}</span>
+                                            <span>{formatNumber(order?.paid_in_sar)}</span>
                                             <span>SAR</span>
                                         </span>
                                     </p>
                                 </>
                             )}
-                            <p className={`col-span-1 ${bag?.is_delivered ? "text-green-600" : "text-red-500"}`}>{bag?.is_delivered ? "Yes" : "No"}</p>
-                            <p className={`col-span-1 ${bag?.is_collected ? "text-green-600" : "text-red-500"}`}>{bag?.is_collected ? "Yes" : "No"}</p>
+                            <select className={`col-span-1 ${order?.is_delivered ? "bg-green-100" : "bg-red-100"} w-full`} value={order?.is_delivered} onChange={e => {
+                                fastUpdateOrder(order?.id, { is_delivered: e.target.value == 'true' ? true : false })
+                            }}>
+                                <option value={true}>Yes</option>
+                                <option value={false}>No</option>
+                            </select>
+                            <select className={`col-span-1 ${order?.is_collected ? "bg-green-100" : "bg-red-100"} w-full`} value={order?.is_collected} onChange={e => {
+                                fastUpdateOrder(order?.id, {
+                                    is_collected: e.target.value == 'true' ? true : false
+                                })
+                            }}>
+                                <option value={true}>Yes</option>
+                                <option value={false}>No</option>
+                            </select>
+                            <p>{order?.date || "No Date"}</p>
                         </div>
                     ))
                 )}

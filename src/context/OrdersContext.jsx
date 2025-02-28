@@ -18,6 +18,17 @@ const OrdersContext = ({ children }) => {
     }, [])
 
 
+    const getLast7Days = () => {
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        return date.toISOString().split('T')[0];
+    };
+
+    const getToday = () => {
+        return new Date().toISOString().split('T')[0];
+    };
+
+
     const [orders, setOrders] = React.useState([])
 
     const [ordersParams, setOrdersParams] = useState({
@@ -26,6 +37,8 @@ const OrdersContext = ({ children }) => {
         customer_number: '',
         is_delivered: '',
         is_collected: '',
+        date_from: getLast7Days(),
+        date_to: getToday(),
     })
 
     const updateOrdersParams = (key, value) => {
@@ -42,8 +55,6 @@ const OrdersContext = ({ children }) => {
                 }
             })
             setOrders(res.data)
-            console.log('orders', res.data);
-
         } catch (error) {
             alert(error.response.status)
             console.error(error)
@@ -61,7 +72,7 @@ const OrdersContext = ({ children }) => {
     const [customer_name, setCustomerName] = React.useState('')
     const [customer_phone, setCustomerPhone] = React.useState('')
     const [customer_wp, setCustomerWp] = React.useState('')
-    const [order_status, setOrderStatus] = React.useState('')
+    const [is_delivered, setIsDelivered] = React.useState('')
     const [shipping_courier, setShippingCourier] = React.useState('')
     const [sales, setSales] = React.useState(0)
     const [total_order_in_sar, setTotalOrderInSar] = React.useState(0)
@@ -107,7 +118,7 @@ const OrdersContext = ({ children }) => {
             setCustomerName('');
             setCustomerPhone('');
             setCustomerWp('');
-            setOrderStatus('');
+            setIsDelivered('');
             setShippingCourier('');
             setSales(0);
             setTotalOrderInSar(0);
@@ -142,7 +153,7 @@ const OrdersContext = ({ children }) => {
             setCustomerWp(order?.customer_wp || '');
             setShippingCourier(order?.shipping_courier || '');
             setShippingCostInEGP(order?.shipping_cost_in_egp || 0);
-            setOrderStatus(order?.order_status || '');
+            setIsDelivered(order?.order_status || '');
             setAddress(order?.address || '');
             setTotalOrderInSar(order?.total_order_in_sar || 0);
             setTotalOrderInEg(order?.total_order_in_eg || 0);
@@ -156,15 +167,16 @@ const OrdersContext = ({ children }) => {
 
 
 
-    const updateOrder = async () => {
+    const updateOrder = async (id) => {
         setProgress(10)
         try {
+
             setProgress(30)
-            const res = await axios.put(`${server}orders/${order?.id}/`, {
+
+            const res = await axios.put(`${server}orders/${id || order?.id}/`, {
                 customer_name,
                 customer_phone,
-                customer_wp,
-                order_status,
+                is_delivered,
                 shipping_courier,
                 sales,
                 total_order_in_sar,
@@ -181,7 +193,7 @@ const OrdersContext = ({ children }) => {
                     Authorization: `Token ${localStorage.getItem('token')}`
                 }
             })
-            setOrders(orders.map(o => o.id === order.id ? res.data : o))
+            setOrders(orders?.map(o => o.id === order.id ? res.data : o))
             setProgress(70)
             toast.success("Order updated successfully")
             setOpen(false)
@@ -189,7 +201,7 @@ const OrdersContext = ({ children }) => {
             setCustomerName('');
             setCustomerPhone('');
             setCustomerWp('');
-            setOrderStatus('');
+            setIsDelivered('');
             setShippingCourier('');
             setSales(0);
             setTotalOrderInSar(0);
@@ -202,6 +214,31 @@ const OrdersContext = ({ children }) => {
             setAddress('');
             setShippingCostInEGP(0);
 
+        } catch (error) {
+            console.error(error)
+            toast.error("Error updating order")
+        } finally {
+            setLoading(false)
+            setProgress(100)
+        }
+    }
+
+
+    const fastUpdateOrder = async (id, data) => {
+        setProgress(10)
+        try {
+            setProgress(30)
+            const res = await axios.put(`${server}orders/${id}/`, data, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem('token')}`
+                }
+            })
+            console.log(res);
+            // setOrders([])
+            // setOrders(orders?.map(o => o?.id == order?.id ? res?.data : o))
+            getOrders()
+            setProgress(70)
+            toast.success("Order updated successfully")
         } catch (error) {
             console.error(error)
             toast.error("Error updating order")
@@ -247,7 +284,7 @@ const OrdersContext = ({ children }) => {
             // shipping details
             shipping_courier, setShippingCourier,
             shipping_cost_in_egp, setShippingCostInEGP,
-            order_status, setOrderStatus,
+            is_delivered, setIsDelivered,
             address, setAddress,
             // money details
             total_order_in_sar, setTotalOrderInSar,
@@ -270,8 +307,10 @@ const OrdersContext = ({ children }) => {
             createOrder,
 
             order, setOrder,
+            setOrders,
 
             updateOrder,
+            fastUpdateOrder,
             deleteOrder,
         }}>
             {children}

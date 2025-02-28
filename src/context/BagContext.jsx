@@ -18,28 +18,25 @@ const BagContext = ({ children }) => {
         setProgress(100)
     }, [])
 
+    const getLast7Days = () => {
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        return date.toISOString().split('T')[0];
+    };
+
+    const getToday = () => {
+        return new Date().toISOString().split('T')[0];
+    };
 
     const [bags, setBags] = React.useState([])
 
     const [bagParams, setBagParams] = React.useState({
-        date_from: '',
-        date_to: '',
+        date_from: getLast7Days(),
+        date_to: getToday(),
 
         shipping_company: '',
     })
 
-    useEffect(() => {
-        const today = new Date();
-        const date_from = new Date();
-        date_from.setDate(today.getDate() - 30);
-
-        setBagParams({
-            ...bagParams,
-            date_from: date_from.toISOString().split('T')[0],
-            date_to: today.toISOString().split('T')[0],
-        });
-
-    }, [])
 
     const updateBagParams = (key, value) => {
         setBagParams({ ...bagParams, [key]: value })
@@ -123,9 +120,10 @@ const BagContext = ({ children }) => {
     }
 
     const addNewOrderDetails = () => {
-        setOrdersDetails([...ordersDetails, {
+        setOrdersDetails([{
             customer_name: '',
             customer_number: '',
+            how_many_pices: 0,
             pieces: [],
             paid_in_egp: 0,
             paid_in_sar: 0,
@@ -136,12 +134,12 @@ const BagContext = ({ children }) => {
             is_collected: false,
             customer_note: '',
             address: '',
-        }])
+        }, ...ordersDetails])
     }
 
     const addNewOrderPiece = (index) => {
         const newOrdersDetails = [...ordersDetails]
-        newOrdersDetails[index].pieces.push({ name: '', code: "", price_in_egp: 0, price_in_sar: 0 })
+        newOrdersDetails[index].pieces.push({ images: [], name: '', code: "", price_in_egp: 0, price_in_sar: 0 })
         setOrdersDetails(newOrdersDetails)
     }
 
@@ -157,6 +155,12 @@ const BagContext = ({ children }) => {
         setOrdersDetails(newOrdersDetails)
     }
 
+    const deleteOrderPieceImage = (orderIndex, pieceIndex, imageIndex) => {
+        const newOrdersDetails = [...ordersDetails]
+        newOrdersDetails[orderIndex].pieces[pieceIndex].images.splice(imageIndex, 1)
+        setOrdersDetails(newOrdersDetails)
+    }
+
     const createOrUpdateBag = async () => {
         setLoading(true)
         try {
@@ -168,11 +172,12 @@ const BagContext = ({ children }) => {
                     Authorization: `Token ${localStorage.getItem('token')}`
                 }
             })
-            toast.success("Bag created successfully")
             setOpen(false)
             if (bagDetails?.id) {
                 setBags(bags.map(b => b.id === bagDetails.id ? res.data : b))
+                toast.success("Order updated successfully")
             } else {
+                toast.success("Order created successfully")
                 setBags([res.data, ...bags])
             }
             setBagDetails({
@@ -283,6 +288,30 @@ const BagContext = ({ children }) => {
         }
     }
 
+
+
+    const deleteBag = async (id) => {
+        try {
+            const res = await axios.delete(`${server}bags/${id}/delete/`, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem('token')}`
+                }
+            })
+            setBags(bags.filter(bag => bag.id !== id))
+            toast.success('Bag deleted successfully')
+            setOpen(false)
+        } catch (error) {
+            console.error(error)
+            if (error.response.status === 401) {
+                localStorage.removeItem('token')
+                window.location.href = '/login'
+                toast.error("You're not logged in")
+                return
+            }
+            toast.error("Something went wrong")
+        }
+    }
+
     return (
         <BagContextProvider.Provider value={{
             open, setOpen,
@@ -302,11 +331,14 @@ const BagContext = ({ children }) => {
             addNewOrderPiece,
             updateOrderPiece,
             deleteOrderPiece,
+            deleteOrderPieceImage,
 
             createOrUpdateBag,
 
             bag, setBag,
-            getBag
+            getBag,
+
+            deleteBag,
         }}>
             {children}
         </BagContextProvider.Provider>

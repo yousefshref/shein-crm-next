@@ -22,7 +22,6 @@ const UserContext = ({ children }) => {
                 }
             } catch (error) {
                 console.error(error)
-                alert(error.response.status)
                 if (error.response.status == 401) {
                     localStorage.removeItem('token')
                     window.location.href = '/login'

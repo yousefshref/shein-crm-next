@@ -16,17 +16,15 @@ const SearchSection = ({
     return (
         <div className="flex gap-10 items-center">
             <p className="text-[#6C85FF]">Search By</p>
-            {page == 'bags' ? (
-                <>
-                    <div
-                        onClick={() => setOpenCalendar(true)}
-                        className="p-2 bg-[#6C85FF] cursor-pointer transition-all duration-300 hover:bg-[#788fff] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
-                    >
-                        <Calendar className="w-full" />
-                    </div>
-                    <CalendarDialog page={page} open={openCalendar} setOpen={setOpenCalendar} />
-                </>
-            ) : null}
+            <>
+                <div
+                    onClick={() => setOpenCalendar(true)}
+                    className="p-2 bg-[#6C85FF] cursor-pointer transition-all duration-300 hover:bg-[#788fff] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
+                >
+                    <Calendar className="w-full" />
+                </div>
+                <CalendarDialog page={page} open={openCalendar} setOpen={setOpenCalendar} />
+            </>
 
             {page == 'orders' ? (
                 <>

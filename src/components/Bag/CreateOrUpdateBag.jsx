@@ -24,6 +24,9 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
         updateBagDetails,
         createOrUpdateBag,
 
+        // delete
+        deleteBag,
+
         // update
         bag,
         setBagDetails,
@@ -201,6 +204,10 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                     {/* orders details */}
                     <div className='flex flex-col gap-2'>
                         <p className='font-semibold text-lg'>Orders Details</p>
+                        <button onClick={() => addNewOrderDetails()} className='flex pe-5 w-fit px-3 flex-row items-center gap-2 cursor-pointer hover:bg-green-400 transition-all duration-300 p-1.5 rounded-full justify-center text-white bg-green-500'>
+                            <Plus size={20} />
+                            <p>Add Another Client</p>
+                        </button>
                         {ordersDetails?.length > 0 ? ordersDetails?.map((order, index) => (
                             <OrderDetailsComponent key={index} order={order} index={index} />
                         )) : (
@@ -208,15 +215,12 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                 <p>No orders found, Click on Plus icon to add orders</p>
                             </div>
                         )}
-                        <button onClick={() => addNewOrderDetails()} className='flex pe-5 w-fit px-3 flex-row items-center gap-2 cursor-pointer hover:bg-green-400 transition-all duration-300 p-1.5 rounded-full justify-center text-white bg-green-500'>
-                            <Plus size={20} />
-                            <p>Add Another Order</p>
-                        </button>
                     </div>
                 </div>
 
                 <DialogFooter className={'w-fit me-auto mt-auto'}>
                     <Button onClick={() => createOrUpdateBag()} type="submit">Done</Button>
+                    <Button onClick={() => deleteBag(bag?.id)} type="submit" variant={'destructive'}>Delete</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
