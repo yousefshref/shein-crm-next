@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
 
-const OrderDetailsComponent = ({ index, order }) => {
+const OrderDetailsComponent = ({ index, order, disabled }) => {
     const { updateOrderDetails, addNewOrderPiece, updateOrderPiece, deleteOrderPiece, deleteOrderDetails, deleteOrderPieceImage } = useContext(BagContextProvider)
 
     const { sellers } = useContext(SellersContextProvider)
@@ -42,30 +42,30 @@ const OrderDetailsComponent = ({ index, order }) => {
             </CollapsibleTrigger>
             <CollapsibleContent>
                 <div className='relative flex flex-col gap-5 p-3 bg-gray-100 rounded-xl my-1'>
-                    <button onClick={() => deleteOrderDetails(index)} className='absolute right-3 top-2 flex w-fit flex-row items-center gap-2 cursor-pointer hover:bg-red-400 transition-all duration-300 p-1 rounded-full justify-center text-white bg-red-500'>
+                    {disabled ? null : <button onClick={() => deleteOrderDetails(index)} className='absolute right-3 top-2 flex w-fit flex-row items-center gap-2 cursor-pointer hover:bg-red-400 transition-all duration-300 p-1 rounded-full justify-center text-white bg-red-500'>
                         <Trash size={20} />
-                    </button>
+                    </button>}
                     <div className='flex flex-col gap-2'>
                         <p className='font-medium text-blue-500'>Customer Details</p>
                         <div className='grid grid-cols-3 gap-5'>
                             <div className='flex flex-col gap-1'>
                                 <p>Customer Name</p>
-                                <input className='input-white' type="text" value={order?.customer_name} onChange={(e) => updateOrderDetails(index, 'customer_name', e.target.value)} />
+                                <input className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled} type="text" value={order?.customer_name} onChange={(e) => updateOrderDetails(index, 'customer_name', e.target.value)} />
                             </div>
                             <div className='flex flex-col gap-1'>
                                 <p>Customer Number</p>
-                                <input className='input-white' type="text" value={order?.customer_number} onChange={(e) => updateOrderDetails(index, 'customer_number', e.target.value)} />
+                                <input className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled} type="text" value={order?.customer_number} onChange={(e) => updateOrderDetails(index, 'customer_number', e.target.value)} />
                             </div>
                             <div className='flex flex-col gap-1'>
                                 <p>Notes</p>
-                                <input className='input-white' type="text" value={order?.customer_note} onChange={(e) => updateOrderDetails(index, 'customer_note', e.target.value)} />
+                                <input className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled} type="text" value={order?.customer_note} onChange={(e) => updateOrderDetails(index, 'customer_note', e.target.value)} />
                             </div>
                         </div>
                         <div>
                             <div className='flex flex-col gap-1'>
                                 <p>Address</p>
                                 <textarea
-                                    className='input-white'
+                                    className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                     type="text"
                                     value={order?.address}
                                     onChange={(e) => updateOrderDetails(index, 'address', e.target.value)}
@@ -80,7 +80,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                     How Many Pieces
                                 </p>
                                 <input
-                                    className='input-white'
+                                    className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                     type="number"
                                     value={order?.how_many_pices || 0}
                                     onChange={(e) => updateOrderDetails(index, 'how_many_pices', e.target.value)}
@@ -104,33 +104,35 @@ const OrderDetailsComponent = ({ index, order }) => {
                                                 <SwiperSlide
                                                     className='cursor-pointer relative flex flex-col justify-center items-center w-full max-w-[100px] min-h-[100px] max-h-[100px] bg-gray-300 rounded-xl'
                                                     onClick={() => {
-                                                        const input = document.createElement('input');
-                                                        input.type = 'file';
-                                                        input.accept = 'image/*';
-                                                        input.onchange = async (e) => {
-                                                            const file = e.target.files[0];
-                                                            if (file) {
-                                                                const formData = new FormData();
-                                                                formData.append('image', file);
-
-                                                                try {
-                                                                    const response = await fetch('https://api.imgbb.com/1/upload?key=e4b8ad3db37cc93ecaf2897f75edc685', {
-                                                                        method: 'POST',
-                                                                        body: formData
-                                                                    });
-                                                                    const result = await response.json();
-                                                                    if (result.success) {
-                                                                        const imageUrl = result.data.url;
-                                                                        updateOrderPiece(index, pieceIndex, 'images', [imageUrl, ...piece?.images]);
-                                                                    } else {
-                                                                        console.error('Image upload failed:', result.error);
+                                                        if(!disabled){
+                                                            const input = document.createElement('input');
+                                                            input.type = 'file';
+                                                            input.accept = 'image/*';
+                                                            input.onchange = async (e) => {
+                                                                const file = e.target.files[0];
+                                                                if (file) {
+                                                                    const formData = new FormData();
+                                                                    formData.append('image', file);
+    
+                                                                    try {
+                                                                        const response = await fetch('https://api.imgbb.com/1/upload?key=e4b8ad3db37cc93ecaf2897f75edc685', {
+                                                                            method: 'POST',
+                                                                            body: formData
+                                                                        });
+                                                                        const result = await response.json();
+                                                                        if (result.success) {
+                                                                            const imageUrl = result.data.url;
+                                                                            updateOrderPiece(index, pieceIndex, 'images', [imageUrl, ...piece?.images]);
+                                                                        } else {
+                                                                            console.error('Image upload failed:', result.error);
+                                                                        }
+                                                                    } catch (error) {
+                                                                        console.error('Error uploading image:', error);
                                                                     }
-                                                                } catch (error) {
-                                                                    console.error('Error uploading image:', error);
                                                                 }
-                                                            }
-                                                        };
-                                                        input.click();
+                                                            };
+                                                            input.click();
+                                                        }
                                                     }}
                                                 >
                                                     <ImageIcon size={40} className='text-white absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2' />
@@ -150,7 +152,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                                     <p>Product Name</p>
                                                     <input
                                                         type="text"
-                                                        className='input-white'
+                                                        className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                                         value={piece?.name}
                                                         onChange={(e) => updateOrderPiece(index, pieceIndex, 'name', e.target.value)}
                                                     />
@@ -159,7 +161,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                                     <p>Product Code</p>
                                                     <input
                                                         type="text"
-                                                        className='input-white'
+                                                        className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                                         value={piece?.code}
                                                         onChange={(e) => updateOrderPiece(index, pieceIndex, 'code', e.target.value)}
                                                     />
@@ -169,7 +171,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                                     <div className='relative'>
                                                         <input
                                                             type="text"
-                                                            className='input-white w-full'
+                                                            className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`}
                                                             value={piece?.price_in_egp}
                                                             onChange={(e) => updateOrderPiece(index, pieceIndex, 'price_in_egp', e.target.value)}
                                                         />
@@ -178,7 +180,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                                     <div className='relative'>
                                                         <input
                                                             type="text"
-                                                            className='input-white w-full'
+                                                            className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`}
                                                             value={piece?.price_in_sar}
                                                             onChange={(e) => updateOrderPiece(index, pieceIndex, 'price_in_sar', e.target.value)}
                                                         />
@@ -193,10 +195,10 @@ const OrderDetailsComponent = ({ index, order }) => {
                                         </div>
                                     )
                             }
-                            <button onClick={() => addNewOrderPiece(index)} className='flex pe-5 w-fit px-3 flex-row items-center gap-2 cursor-pointer hover:bg-green-400 transition-all duration-300 p-1.5 rounded-full justify-center text-white bg-green-500'>
+                            {!disabled && <button onClick={() => addNewOrderPiece(index)} className='flex pe-5 w-fit px-3 flex-row items-center gap-2 cursor-pointer hover:bg-green-400 transition-all duration-300 p-1.5 rounded-full justify-center text-white bg-green-500'>
                                 <Plus size={20} />
                                 <p>Add Piece</p>
-                            </button>
+                            </button>}
                         </div>
                         <hr />
                     </div>
@@ -206,7 +208,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                         <p className='font-medium text-blue-500'>Order Status</p>
                         <div className='flex flex-col gap-1'>
                             <p>Seller</p>
-                            <SearchDropdown items={sellersNames} placeholder='Select Seller...' onSelect={(e) => updateOrderDetails(index, 'seller', e)} />
+                            <SearchDropdown disabled={disabled} items={sellersNames} placeholder='Select Seller...' onSelect={(e) => updateOrderDetails(index, 'seller', e)} />
                         </div>
                         <div className='grid grid-cols-2 gap-5'>
                             <div className='flex flex-col gap-2'>
@@ -215,7 +217,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                     <input
                                         value={order?.paid_in_egp}
                                         onChange={(e) => updateOrderDetails(index, 'paid_in_egp', +e.target.value)}
-                                        type="number" className='input-white'
+                                        type="number" className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                     />
                                     <span className='absolute right-2 top-1.5 font-bold'>EGP</span>
                                 </div>
@@ -223,7 +225,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                             <input
                                 value={order?.paid_in_sar}
                                 onChange={(e) => updateOrderDetails(index, 'paid_in_sar', +e.target.value)}
-                                type="number" className='input-white'
+                                type="number" className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                             />
                             <span className='absolute right-2 top-1.5 font-bold'>SAR</span>
                         </div> */}
@@ -232,9 +234,10 @@ const OrderDetailsComponent = ({ index, order }) => {
                                 <p>Remaining</p>
                                 <div className='relative'>
                                     <input
+                                        disabled={disabled}
                                         value={order?.remaining_in_egp}
                                         onChange={(e) => updateOrderDetails(index, 'remaining_in_egp', +e.target.value)}
-                                        type="number" className='input-white w-full'
+                                        type="number" className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`}
                                     />
                                     <span className='absolute right-2 top-1.5 font-bold'>EGP</span>
                                 </div>
@@ -242,7 +245,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                             <input
                                 value={order?.remaining_in_sar}
                                 onChange={(e) => updateOrderDetails(index, 'remaining_in_sar', e.target.value)}
-                                type="number" className='input-white w-full'
+                                type="number" className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`}
                             />
                             <span className='absolute right-2 top-1.5 font-bold'>SAR</span>
                         </div> */}
@@ -254,7 +257,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                     checked={order?.is_delivered}
                                     onChange={(e) => updateOrderDetails(index, 'is_delivered', e.target.checked)}
                                     type="checkbox"
-                                    className='input-white'
+                                    className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                 />
                                 <p>Is Deliverd</p>
                             </div>
@@ -263,7 +266,7 @@ const OrderDetailsComponent = ({ index, order }) => {
                                     checked={order?.is_collected}
                                     onChange={(e) => updateOrderDetails(index, 'is_collected', e.target.checked)}
                                     type="checkbox"
-                                    className='input-white'
+                                    className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                 />
                                 <p>Is Collected</p>
                             </div>

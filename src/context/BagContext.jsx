@@ -34,6 +34,8 @@ const BagContext = ({ children }) => {
         date_from: getLast7Days(),
         date_to: getToday(),
 
+        is_closed: 'false',
+
         shipping_company: '',
     })
 
@@ -90,6 +92,7 @@ const BagContext = ({ children }) => {
         xg: '',
         discount_in_egp: 0,
         discount_in_sar: 0,
+        is_closed: false
     })
     const [ordersDetails, setOrdersDetails] = React.useState([])
 

@@ -9,7 +9,8 @@ export default function SearchDropdown({
     items = [],
     placeholder = "Search...",
     onSelect,
-    defaultValue = ""
+    defaultValue = "",
+    disabled
 }) {
     const [search, setSearch] = useState("");
 
@@ -22,6 +23,7 @@ export default function SearchDropdown({
         <Popover>
             <PopoverTrigger>
                 <Input
+                    disabled={disabled}
                     placeholder={placeholder}
                     value={search}
                     onChange={(e) => {

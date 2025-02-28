@@ -150,17 +150,18 @@ const BagsSection = ({ page, setPage }) => {
             {/* orders list */}
             <div className="mt-5 flex flex-col gap-5">
                 <div
-                    className={`${is_seller ? "grid grid-cols-5" : "grid grid-cols-7"
+                    className={`${is_seller ? "grid grid-cols-6" : "grid grid-cols-8"
                         } gap-10 md:text-sm text-xs font-bold`}
                 >
-                    <p className="col-span-1">date</p>
-                    <p className="col-span-1">price</p>
-                    <p className="col-span-1">weight</p>
-                    <p className="col-span-1">shipping cost</p>
-                    <p className="col-span-1">shipping company</p>
+                    <p className="col-span-1">Name</p>
+                    <p className="col-span-1">Date</p>
+                    <p className="col-span-1">Price</p>
+                    <p className="col-span-1">Weight</p>
+                    <p className="col-span-1">Shipping Cost</p>
+                    <p className="col-span-1">Shipping Company</p>
                     {is_seller ? null : (
                         <>
-                            <p className="col-span-1">profit</p>
+                            <p className="col-span-1">Profit</p>
                             <p className="col-span-1">XG</p>
                         </>
                     )}
@@ -173,13 +174,14 @@ const BagsSection = ({ page, setPage }) => {
                     bags?.map((bag) => (
                         <div
                             key={bag?.id}
-                            className={`${is_seller ? "grid grid-cols-5" : "grid grid-cols-7"
+                            className={`${is_seller ? "grid grid-cols-6" : "grid grid-cols-8"
                                 } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
                             onClick={() => {
                                 setOpen(true);
                                 getBag(bag?.id);
                             }}
                         >
+                            <p className="col-span-1">{bag?.name}</p>
                             <p className="col-span-1">{bag?.date || "No Date"}</p>
                             <p className="col-span-1">
                                 <span className="flex flex-col space-y-2">
