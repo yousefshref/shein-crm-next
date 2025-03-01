@@ -216,7 +216,7 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                 <div className='relative flex flex-col gap-1'>
                                     <input
                                         value={order?.paid_in_egp}
-                                        onChange={(e) => updateOrderDetails(index, 'paid_in_egp', +e.target.value)}
+                                        onChange={(e) => updateOrderDetails(index, 'paid_in_egp', Number(e.target.value))}
                                         type="number" className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
                                     />
                                     <span className='absolute right-2 top-1.5 font-bold'>EGP</span>
@@ -236,7 +236,7 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                     <input
                                         disabled={disabled}
                                         value={order?.remaining_in_egp}
-                                        onChange={(e) => updateOrderDetails(index, 'remaining_in_egp', +e.target.value)}
+                                        onChange={(e) => updateOrderDetails(index, 'remaining_in_egp', Number(e.target.value))}
                                         type="number" className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`}
                                     />
                                     <span className='absolute right-2 top-1.5 font-bold'>EGP</span>

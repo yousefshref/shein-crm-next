@@ -94,6 +94,8 @@ const BagContext = ({ children }) => {
         discount_in_sar: 0,
         is_closed: false
     })
+
+
     const [ordersDetails, setOrdersDetails] = React.useState([])
 
     const updateBagDetails = (key, value) => {
@@ -103,16 +105,6 @@ const BagContext = ({ children }) => {
     const updateOrderDetails = (index, key, value) => {
         const newOrdersDetails = [...ordersDetails]
         newOrdersDetails[index][key] = value
-
-        if (key === 'paid_in_egp' || key === 'paid_in_sar') {
-            const order_products_price_in_egp = newOrdersDetails[index]?.pieces?.reduce((acc, piece) => acc + piece.price_in_egp, 0)
-            const order_products_price_in_sar = newOrdersDetails[index]?.pieces?.reduce((acc, piece) => acc + piece.price_in_sar, 0)
-
-            newOrdersDetails[index].remaining_in_egp = order_products_price_in_egp - value
-            newOrdersDetails[index].remaining_in_sar = order_products_price_in_sar - value
-        }
-
-
         setOrdersDetails(newOrdersDetails)
     }
 
@@ -215,65 +207,101 @@ const BagContext = ({ children }) => {
 
 
     // update profit fields
-    useEffect(() => {
-        if (ordersDetails) {
-            // Calculate the total orders amount, ensuring prices are numbers
-            const totalOrdersAmountEGP = ordersDetails?.reduce((orderSum, order) => {
-                const piecesSum = order.pieces.reduce((sum, piece) => sum + Number(piece.price_in_egp), 0);
-                return orderSum + piecesSum;
-            }, 0);
-
-            // Convert shipping and discount to numbers as well
-            const shipping_in_egp = Number(bagDetails.shipping_cost_in_egp);
-            const discount_in_egp = Number(bagDetails.discount_in_egp || 0);
-
-
-            // Calculate profit
-            const calculatedProfit = totalOrdersAmountEGP - (discount_in_egp + shipping_in_egp)
-
-            // Update bagDetails only if the profit has changed
-            if (calculatedProfit !== bagDetails.profit_in_egp) {
-                setBagDetails(prev => ({
-                    ...prev,
-                    profit_in_egp: discount_in_egp == 0 ? 0 : calculatedProfit,
-                    price_in_egp: totalOrdersAmountEGP + shipping_in_egp,
-                }));
-            }
-            setBagDetails(prev => ({
-                ...prev,
-                price_in_egp: totalOrdersAmountEGP + shipping_in_egp,
-            }));
-
-
-            // Calculate the total orders amount, ensuring prices are numbers
-            const totalOrdersAmountSAR = ordersDetails?.reduce((orderSum, order) => {
-                const piecesSum = order.pieces.reduce((sum, piece) => sum + Number(piece.price_in_sar), 0);
-                return orderSum + piecesSum;
-            }, 0);
-
-            // Convert shipping and discount to numbers as well
-            const shipping_in_sar = Number(bagDetails.shipping_cost_in_sar);
-            const discount_in_sar = Number(bagDetails.discount_in_sar || 0);
-
-
-            // Calculate profit
-            const calculatedProfitInSAR = totalOrdersAmountSAR - (discount_in_sar + shipping_in_sar)
-
-            // Update bagDetails only if the profit has changed
-            if (calculatedProfitInSAR !== bagDetails.profit_in_sar) {
-                setBagDetails(prev => ({
-                    ...prev,
-                    profit_in_sar: discount_in_sar == 0 ? 0 : calculatedProfitInSAR,
-                    price_in_sar: totalOrdersAmountSAR + shipping_in_sar,
-                }));
-            }
-            setBagDetails(prev => ({
-                ...prev,
-                price_in_sar: totalOrdersAmountSAR + shipping_in_sar,
-            }));
+    // Function to calculate the total pieces price for all orders
+    const calculateTotalPiecesPrice = () => {
+        let totalEgp = 0;
+        let totalSar = 0;
+        ordersDetails.forEach(order => {
+          order.pieces.forEach(piece => {
+            totalEgp += Number(piece.price_in_egp);
+            totalSar += Number(piece.price_in_sar);
+          });
+        });
+        return { totalEgp, totalSar };
+      };
+      
+      const calculateAndUpdateValues = () => {
+        // 1. Calculate overall pieces price
+        const { totalEgp, totalSar } = calculateTotalPiecesPrice();
+      
+        // 2. Calculate price after discount for each currency using total pieces price
+        const priceAfterDiscountEgp = totalEgp - Number(bagDetails.discount_in_egp);
+        const priceAfterDiscountSar = totalSar - Number(bagDetails.discount_in_sar);
+      
+        // 3. Calculate profit: total pieces price minus (price after discount + shipping cost)
+        const profitEgp = totalEgp - priceAfterDiscountEgp - Number(bagDetails.shipping_cost_in_egp);
+        const profitSar = totalSar - priceAfterDiscountSar - Number(bagDetails.shipping_cost_in_sar);
+      
+        // 4. Calculate xg using the formula: profit_in_egp / (price_after_discount in SAR)
+        // Avoid division by zero by checking priceAfterDiscountSar
+        const xg = priceAfterDiscountSar !== 0 ? profitEgp / priceAfterDiscountSar : 0;
+      
+        // 5. Update bagDetails with new values
+        setBagDetails(prev => {
+          const updated = { ...prev };
+          let shouldUpdate = false;
+      
+          // Update price_in_egp and price_in_sar to total pieces prices
+          if (prev.price_in_egp !== totalEgp) {
+            updated.price_in_egp = totalEgp;
+            shouldUpdate = true;
+          }
+          if (prev.price_in_sar !== totalSar) {
+            updated.price_in_sar = totalSar;
+            shouldUpdate = true;
+          }
+      
+          // Update profit values
+          if (prev.profit_in_egp !== profitEgp || prev.profit_in_sar !== profitSar) {
+            updated.profit_in_egp = profitEgp;
+            updated.profit_in_sar = profitSar;
+            shouldUpdate = true;
+          }
+      
+          // Update xg field
+          if (prev.xg !== xg) {
+            updated.xg = xg;
+            shouldUpdate = true;
+          }
+          return shouldUpdate ? updated : prev;
+        });
+      
+        // 6. Update each order's remaining amount (total pieces price - paid)
+        const updatedOrders = ordersDetails.map(order => {
+          let orderTotalEgp = 0;
+          let orderTotalSar = 0;
+          order.pieces.forEach(piece => {
+            orderTotalEgp += Number(piece.price_in_egp);
+            orderTotalSar += Number(piece.price_in_sar);
+          });
+          const newRemainingEgp = orderTotalEgp - Number(order.paid_in_egp);
+          const newRemainingSar = orderTotalSar - Number(order.paid_in_sar);
+      
+          if (order.remaining_in_egp !== newRemainingEgp || order.remaining_in_sar !== newRemainingSar) {
+            return {
+              ...order,
+              remaining_in_egp: newRemainingEgp,
+              remaining_in_sar: newRemainingSar
+            };
+          }
+          return order;
+        });
+      
+        // Only update orders state if there is any change
+        if (JSON.stringify(updatedOrders) !== JSON.stringify(ordersDetails)) {
+          setOrdersDetails(updatedOrders);
         }
-    }, [ordersDetails, bagDetails.discount_in_sar, bagDetails.shipping_cost_in_sar, bagDetails.discount_in_egp, bagDetails.shipping_cost_in_egp]);
-
+      };
+      
+      React.useEffect(() => {
+        calculateAndUpdateValues();
+      }, [
+        ordersDetails,
+        bagDetails.discount_in_egp,
+        bagDetails.shipping_cost_in_egp,
+        bagDetails.discount_in_sar,
+        bagDetails.shipping_cost_in_sar,
+      ]);
 
 
     const [bag, setBag] = useState(null)
