@@ -5,11 +5,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'sonner';
 import SearchSection from '../SearchSection';
 import { formatNumber } from '@/lib/utils';
-import { Plus } from 'lucide-react';
+import { FolderClosed, Plus } from 'lucide-react';
 import CreateOrUpdateBag from '../Bag/CreateOrUpdateBag';
 import BagsOrdersPagesChanger from '../BagsOrdersPagesChanger';
 import { OrdersContextProvider } from '@/context/OrdersContext';
 import ChartsSection from '../ChartsSection';
+
+
 
 import {
     Dialog,
@@ -18,13 +20,13 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-  } from "@/components/ui/dialog"
+} from "@/components/ui/dialog"
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
+import PieceDetails from '../PieceDetails';
 
 
 const OrdersSection = ({ page, setPage }) => {
+
 
     const { is_seller } = useContext(UserContextProvider);
 
@@ -45,6 +47,7 @@ const OrdersSection = ({ page, setPage }) => {
 
 
     const [openedCustomer, setOpenedCustomer] = useState(null);
+
 
     return (
         <div
@@ -115,7 +118,7 @@ const OrdersSection = ({ page, setPage }) => {
             {/* orders list */}
             <div className="mt-20 flex flex-col gap-5">
                 <div className={`${is_seller ? "grid grid-cols-8" : "grid grid-cols-9"
-                        } gap-10 md:text-sm text-xs font-bold`}
+                    } gap-10 md:text-sm text-xs font-bold`}
                 >
                     <p className="col-span-1">Order</p>
                     <p className="col-span-1">Customer Name</p>
@@ -125,8 +128,8 @@ const OrdersSection = ({ page, setPage }) => {
                     <p className="col-span-1">Is Delivered</p>
                     <p className="col-span-1">Is Collected</p>
                     <p className="col-span-1">Date</p>
-                </div>      
-                
+                </div>
+
                 {orders?.length == 0 ? (
                     <div className="p-3 px-4 col-span-7 bg-yellow-100 text-yellow-500 text-lg">
                         <p>No Clients</p>
@@ -137,25 +140,25 @@ const OrdersSection = ({ page, setPage }) => {
                             key={order?.id}
                             className={`${is_seller ? "grid grid-cols-8" : "grid grid-cols-9"
                                 } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
-                            
+
                         >
-                            <p 
-                            onClick={() => {
-                                setOpenedCustomer(order)
-                            }}
-                            className="col-span-1">{order?.bag_name}</p>
-                            <p 
-                            onClick={() => {
-                                setOpenedCustomer(order)
-                            }} className="col-span-1">{order?.customer_name}</p>
-                            <p 
-                            onClick={() => {
-                                setOpenedCustomer(order)
-                            }} className="col-span-1">{order?.customer_number}</p>
-                            <p 
-                            onClick={() => {
-                                setOpenedCustomer(order)
-                            }} className="col-span-1 flex flex-col">
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }}
+                                className="col-span-1">{order?.bag_name}</p>
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }} className="col-span-1">{order?.customer_name}</p>
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }} className="col-span-1">{order?.customer_number}</p>
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }} className="col-span-1 flex flex-col">
                                 <span>
                                     {formatNumber(order?.paid_in_egp)} EGP
                                 </span>
@@ -163,10 +166,10 @@ const OrdersSection = ({ page, setPage }) => {
                                     {formatNumber(order?.paid_in_sar)} EGP
                                 </span>
                             </p>
-                            <p 
-                            onClick={() => {
-                                setOpenedCustomer(order)
-                            }} className="col-span-1 flex flex-col">
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }} className="col-span-1 flex flex-col">
                                 <span>
                                     {formatNumber(order?.remaining_in_sar)} EGP
                                 </span>
@@ -188,48 +191,38 @@ const OrdersSection = ({ page, setPage }) => {
                                 <option value={true}>Yes</option>
                                 <option value={false}>No</option>
                             </select>
-                            <p 
-                            onClick={() => {
-                                setOpenedCustomer(order)
-                            }}>{order?.date || "No Date"}</p>
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }}>{order?.date || "No Date"}</p>
                         </div>
                     ))
                 )}
             </div>
 
             {/* pop the data */}
-            <Dialog open={openedCustomer} onOpenChange={setOpenedCustomer}>
+            <Dialog open={openedCustomer}>
                 <DialogContent className="flex flex-col w-full max-w-[97%] h-full max-h-[94%] overflow-y-scroll">
+
                     <DialogHeader className={'h-0 overflow-hidden'}>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
-                    </DialogDescription>
+                        <DialogTitle>Are you absolutely sure?</DialogTitle>
+                        <DialogDescription>
+                            This action cannot be undone. This will permanently delete your account
+                            and remove your data from our servers.
+                        </DialogDescription>
                     </DialogHeader>
+
+                    {/* close */}
+                    <div onClick={() => setOpenedCustomer(null)} className='absolute z-50 p-1 bg-red-500 text-white rounded-sm cursor-pointer top-3 right-3 px-3'>
+                        X
+                    </div>
 
                     {/* content */}
                     {/* all pieces */}
-                    <div className='flex flex-col'>
-                        <p className='text-blue-500 text-sm mb-3'>Pieces</p>
+                    <div className="flex flex-col">
+                        <p className="text-blue-500 text-sm mb-3">Pieces</p>
                         {openedCustomer?.pieces?.map((piece, pieceId) => (
-                            <div key={pieceId} className='space-y-2 p-2 border rounded-xl'>
-                                <Swiper
-                                    slidesPerView={"auto"}
-                                    spaceBetween={30}
-                                    loop={true}
-                                >
-                                    {piece?.images?.map((image, imageIndex) => (
-                                        <SwiperSlide key={imageIndex} className='w-full max-w-[70px]'>
-                                            <img src={image} className='w-full h-full object-contain' />
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
-                                <p className='text-xs'>{piece?.name}</p>
-                                <p className='text-xs'>{piece?.code}</p>
-                                <p className='text-xs'>{piece?.price_in_egp} EGP</p>
-                                <p className='text-xs'>{piece?.price_in_sar} SAR</p>
-                            </div>
+                            <PieceDetails key={pieceId} piece={piece} />
                         ))}
                     </div>
                     {/* bsic info and seller */}
@@ -237,7 +230,7 @@ const OrdersSection = ({ page, setPage }) => {
                         <div className={`grid ${openedCustomer?.seller_name ? "grid-cols-2" : "grid-cols-1"} gap-5`}>
                             {openedCustomer?.seller_name ? (
                                 <p className='col-span-1'><span className='text-sm'>Seller:</span> <span className='font-bold'>{openedCustomer?.seller_name}</span></p>
-                            ): null}
+                            ) : null}
                             <p className='col-span-1'><span className='text-sm'>Bag Name:</span> <span className='font-bold'>{openedCustomer?.bag_name}</span></p>
                         </div>
                         <div className='grid grid-cols-3 items-center gap-5 w-full'>
@@ -245,8 +238,8 @@ const OrdersSection = ({ page, setPage }) => {
                             <p><span className="text-sm col-span-1">Customer Number:</span> <span className='font-bold'>{openedCustomer?.customer_number}</span></p>
                             <p><span className="text-sm col-span-1">Pieces:</span> <span className="font-bold">{openedCustomer?.how_many_pieces ? openedCustomer?.how_many_pieces : openedCustomer?.pieces?.length || 0}</span></p>
                         </div>
-                        {openedCustomer?.notes ? (
-                            <p><span className="text-sm">Notes:</span> <span className='font-bold'>{openedCustomer?.notes}</span></p>
+                        {openedCustomer?.customer_note ? (
+                            <p><span className="text-sm">Notes:</span> <span className='font-bold'>{openedCustomer?.customer_note}</span></p>
                         ) : null}
                         <p><span className="text-sm">Address:</span> <span className="font-bold">{openedCustomer?.address}</span></p>
                     </div>
@@ -256,12 +249,12 @@ const OrdersSection = ({ page, setPage }) => {
                             <div className='col-span-1 space-y-1'>
                                 <p className='text-sm text-gray-500'>Paid:</p>
                                 <p className=''>{openedCustomer?.paid_in_egp || 0} EGP</p>
-                                <p className=''>{openedCustomer?.paid_in_sar || 0} SAR</p>
+                                {/* <p className=''>{openedCustomer?.paid_in_sar || 0} SAR</p> */}
                             </div>
                             <div className='col-span-1 space-y-1'>
                                 <p className='text-sm text-gray-500'>Remaining:</p>
                                 <p className=''>{openedCustomer?.remaining_in_egp || 0} EGP</p>
-                                <p className=''>{openedCustomer?.remaining_in_sar || 0} SAR</p>
+                                {/* <p className=''>{openedCustomer?.remaining_in_sar || 0} SAR</p> */}
                             </div>
                         </div>
                     </div>
