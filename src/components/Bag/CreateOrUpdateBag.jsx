@@ -51,7 +51,7 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
     }, [bag])
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open}>
             <DialogContent className="flex flex-col w-full max-w-[97%] h-full max-h-[94%] overflow-y-scroll">
                 <DialogHeader className="hidden">
                     <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -60,6 +60,13 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                         and remove your data from our servers.
                     </DialogDescription>
                 </DialogHeader>
+
+                <button
+                    onClick={() => setOpen(false)}
+                    className="absolute top-2 right-2 text-white bg-gray-800 rounded-full p-2 px-4 z-40"
+                >
+                    X
+                </button>
 
                 {/* Your content */}
                 <div className='flex flex-col gap-5'>
@@ -95,7 +102,7 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                             <div className='grid grid-cols-3 mt-1 gap-5'>
                                 <div className='col-span-1 flex flex-col gap-1'>
                                     <p>Weight</p>
-                                    <input  
+                                    <input
                                         disabled={bag?.is_closed}
                                         value={bagDetails?.weight}
                                         onChange={(e) => updateBagDetails('weight', e.target.value)}
@@ -103,7 +110,7 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                 </div>
                                 <div className='relative col-span-1 flex flex-col gap-1'>
                                     <p>Shipping Company</p>
-                                    <SearchDropdown  
+                                    <SearchDropdown
                                         disabled={bag?.is_closed}
                                         items={shippingCompaniesNames}
                                         placeholder="Select a Shipping Company..."
@@ -114,8 +121,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                 <div className='col-span-1 flex flex-col gap-1'>
                                     <p>Shipping Cost</p>
                                     <div className='relative'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.shipping_cost_in_egp}
                                             onChange={(e) => updateBagDetails('shipping_cost_in_egp', e.target.value)}
                                             type="number" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -123,8 +130,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>EGP</span>
                                     </div>
                                     <div className='relative'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.shipping_cost_in_sar}
                                             onChange={(e) => updateBagDetails('shipping_cost_in_sar', e.target.value)}
                                             type="number" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -141,8 +148,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                 <div className='col-span-1 flex flex-col gap-3'>
                                     <p>Price</p>
                                     <div className='relative flex flex-col gap-2'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.price_in_egp}
                                             onChange={(e) => updateBagDetails('price_in_egp', e.target.value)}
                                             type="text" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -150,8 +157,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>EGP</span>
                                     </div>
                                     <div className='relative flex flex-col gap-2'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.price_in_sar}
                                             onChange={(e) => updateBagDetails('price_in_sar', e.target.value)}
                                             type="text" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -162,8 +169,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                 <div className='flex col-span-1 flex-col gap-3'>
                                     <p>Price After Discount</p>
                                     <div className='relative flex flex-col gap-2'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.discount_in_egp}
                                             onChange={(e) => updateBagDetails('discount_in_egp', e.target.value)}
                                             type="text" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -171,8 +178,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>EGP</span>
                                     </div>
                                     <div className='relative flex flex-col gap-2'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.discount_in_sar}
                                             onChange={(e) => updateBagDetails('discount_in_sar', e.target.value)}
                                             type="text" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -183,8 +190,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                 <div className='flex flex-col gap-3'>
                                     <p>Profit</p>
                                     <div className='relative w-full'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.profit_in_egp}
                                             onChange={(e) => updateBagDetails('profit_in_egp', e.target.value)}
                                             type="text" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -192,8 +199,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>EGP</span>
                                     </div>
                                     <div className='relative w-full'>
-                                        <input  
-                                        disabled={bag?.is_closed}
+                                        <input
+                                            disabled={bag?.is_closed}
                                             value={bagDetails?.profit_in_sar}
                                             onChange={(e) => updateBagDetails('profit_in_sar', e.target.value)}
                                             type="text" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
@@ -204,8 +211,8 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                             </div>
                             <div className='col-span-1 flex flex-col gap-3 mt-4'>
                                 <p>XG</p>
-                                <input  
-                                        disabled={bag?.is_closed}
+                                <input
+                                    disabled={bag?.is_closed}
                                     value={bagDetails?.xg}
                                     onChange={(e) => updateBagDetails('xg', e.target.value)}
                                     type="number" className={`input-primary ${bag?.is_closed ? "cursor-not-allowed" : ""}`} />
@@ -224,7 +231,7 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                     <div className='flex flex-col gap-2'>
                         <p className='font-semibold text-lg'>Orders Details</p>
                         <button onClick={() => {
-                            if(!bag?.is_closed){
+                            if (!bag?.is_closed) {
                                 addNewOrderDetails()
                             }
                         }} className={`flex pe-5 w-fit px-3 flex-row items-center gap-2 cursor-pointer hover:bg-green-400 transition-all duration-300 p-1.5 rounded-full justify-center text-white bg-green-500 ${bag?.is_closed ? "opacity-40" : "opacity-100"}`}>

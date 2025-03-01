@@ -29,7 +29,7 @@ const PieceDetails = ({ piece }) => {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                <p className="text-xs">{piece?.name}</p>
+                {/* <p className="text-xs">{piece?.name}</p> */}
                 <p className="text-xs">{piece?.code}</p>
                 <p className="text-xs">{piece?.price_in_egp} EGP</p>
                 <p className="text-xs">{piece?.price_in_sar} SAR</p>

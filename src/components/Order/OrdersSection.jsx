@@ -162,20 +162,20 @@ const OrdersSection = ({ page, setPage }) => {
                                 <span>
                                     {formatNumber(order?.paid_in_egp)} EGP
                                 </span>
-                                <span>
+                                {/* <span>
                                     {formatNumber(order?.paid_in_sar)} EGP
-                                </span>
+                                </span> */}
                             </p>
                             <p
                                 onClick={() => {
                                     setOpenedCustomer(order)
                                 }} className="col-span-1 flex flex-col">
                                 <span>
-                                    {formatNumber(order?.remaining_in_sar)} EGP
+                                    {formatNumber(order?.remaining_in_egp)} EGP
                                 </span>
-                                <span>
+                                {/* <span>
                                     {formatNumber(order?.remaining_in_sar)} EGP
-                                </span>
+                                </span> */}
                             </p>
                             <select className={`col-span-1 ${order?.is_delivered ? "bg-green-100" : "bg-red-100"} w-full`} value={order?.is_delivered} onChange={e => {
                                 fastUpdateOrder(order?.id, { is_delivered: e.target.value == 'true' ? true : false })

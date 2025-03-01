@@ -212,96 +212,96 @@ const BagContext = ({ children }) => {
         let totalEgp = 0;
         let totalSar = 0;
         ordersDetails.forEach(order => {
-          order.pieces.forEach(piece => {
-            totalEgp += Number(piece.price_in_egp);
-            totalSar += Number(piece.price_in_sar);
-          });
+            order.pieces.forEach(piece => {
+                totalEgp += Number(piece.price_in_egp);
+                totalSar += Number(piece.price_in_sar);
+            });
         });
         return { totalEgp, totalSar };
-      };
-      
-      const calculateAndUpdateValues = () => {
+    };
+
+    const calculateAndUpdateValues = () => {
         // 1. Calculate overall pieces price
         const { totalEgp, totalSar } = calculateTotalPiecesPrice();
-      
+
         // 2. Calculate price after discount for each currency using total pieces price
         const priceAfterDiscountEgp = totalEgp - Number(bagDetails.discount_in_egp);
         const priceAfterDiscountSar = totalSar - Number(bagDetails.discount_in_sar);
-      
+
         // 3. Calculate profit: total pieces price minus (price after discount + shipping cost)
         const profitEgp = totalEgp - priceAfterDiscountEgp - Number(bagDetails.shipping_cost_in_egp);
         const profitSar = totalSar - priceAfterDiscountSar - Number(bagDetails.shipping_cost_in_sar);
-      
+
         // 4. Calculate xg using the formula: profit_in_egp / (price_after_discount in SAR)
         // Avoid division by zero by checking priceAfterDiscountSar
         const xg = priceAfterDiscountSar !== 0 ? profitEgp / priceAfterDiscountSar : 0;
-      
+
         // 5. Update bagDetails with new values
         setBagDetails(prev => {
-          const updated = { ...prev };
-          let shouldUpdate = false;
-      
-          // Update price_in_egp and price_in_sar to total pieces prices
-          if (prev.price_in_egp !== totalEgp) {
-            updated.price_in_egp = totalEgp;
-            shouldUpdate = true;
-          }
-          if (prev.price_in_sar !== totalSar) {
-            updated.price_in_sar = totalSar;
-            shouldUpdate = true;
-          }
-      
-          // Update profit values
-          if (prev.profit_in_egp !== profitEgp || prev.profit_in_sar !== profitSar) {
-            updated.profit_in_egp = profitEgp;
-            updated.profit_in_sar = profitSar;
-            shouldUpdate = true;
-          }
-      
-          // Update xg field
-          if (prev.xg !== xg) {
-            updated.xg = xg;
-            shouldUpdate = true;
-          }
-          return shouldUpdate ? updated : prev;
+            const updated = { ...prev };
+            let shouldUpdate = false;
+
+            // Update price_in_egp and price_in_sar to total pieces prices
+            if (prev.price_in_egp !== totalEgp) {
+                updated.price_in_egp = totalEgp;
+                shouldUpdate = true;
+            }
+            if (prev.price_in_sar !== totalSar) {
+                updated.price_in_sar = totalSar;
+                shouldUpdate = true;
+            }
+
+            // Update profit values
+            if (prev.profit_in_egp !== profitEgp || prev.profit_in_sar !== profitSar) {
+                updated.profit_in_egp = profitEgp;
+                updated.profit_in_sar = profitSar;
+                shouldUpdate = true;
+            }
+
+            // Update xg field
+            if (prev.xg !== xg) {
+                updated.xg = xg;
+                shouldUpdate = true;
+            }
+            return shouldUpdate ? updated : prev;
         });
-      
+
         // 6. Update each order's remaining amount (total pieces price - paid)
         const updatedOrders = ordersDetails.map(order => {
-          let orderTotalEgp = 0;
-          let orderTotalSar = 0;
-          order.pieces.forEach(piece => {
-            orderTotalEgp += Number(piece.price_in_egp);
-            orderTotalSar += Number(piece.price_in_sar);
-          });
-          const newRemainingEgp = orderTotalEgp - Number(order.paid_in_egp);
-          const newRemainingSar = orderTotalSar - Number(order.paid_in_sar);
-      
-          if (order.remaining_in_egp !== newRemainingEgp || order.remaining_in_sar !== newRemainingSar) {
-            return {
-              ...order,
-              remaining_in_egp: newRemainingEgp,
-              remaining_in_sar: newRemainingSar
-            };
-          }
-          return order;
+            let orderTotalEgp = 0;
+            let orderTotalSar = 0;
+            order.pieces.forEach(piece => {
+                orderTotalEgp += Number(piece.price_in_egp);
+                orderTotalSar += Number(piece.price_in_sar);
+            });
+            const newRemainingEgp = orderTotalEgp - Number(order.paid_in_egp);
+            const newRemainingSar = orderTotalSar - Number(order.paid_in_sar);
+
+            if (order.remaining_in_egp !== newRemainingEgp || order.remaining_in_sar !== newRemainingSar) {
+                return {
+                    ...order,
+                    remaining_in_egp: newRemainingEgp,
+                    remaining_in_sar: newRemainingSar
+                };
+            }
+            return order;
         });
-      
+
         // Only update orders state if there is any change
         if (JSON.stringify(updatedOrders) !== JSON.stringify(ordersDetails)) {
-          setOrdersDetails(updatedOrders);
+            setOrdersDetails(updatedOrders);
         }
-      };
-      
-      React.useEffect(() => {
+    };
+
+    React.useEffect(() => {
         calculateAndUpdateValues();
-      }, [
+    }, [
         ordersDetails,
         bagDetails.discount_in_egp,
         bagDetails.shipping_cost_in_egp,
         bagDetails.discount_in_sar,
         bagDetails.shipping_cost_in_sar,
-      ]);
+    ]);
 
 
     const [bag, setBag] = useState(null)

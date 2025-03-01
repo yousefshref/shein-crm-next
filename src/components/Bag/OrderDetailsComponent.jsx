@@ -104,7 +104,7 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                                 <SwiperSlide
                                                     className='cursor-pointer relative flex flex-col justify-center items-center w-full max-w-[100px] min-h-[100px] max-h-[100px] bg-gray-300 rounded-xl'
                                                     onClick={() => {
-                                                        if(!disabled){
+                                                        if (!disabled) {
                                                             const input = document.createElement('input');
                                                             input.type = 'file';
                                                             input.accept = 'image/*';
@@ -113,7 +113,7 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                                                 if (file) {
                                                                     const formData = new FormData();
                                                                     formData.append('image', file);
-    
+
                                                                     try {
                                                                         const response = await fetch('https://api.imgbb.com/1/upload?key=e4b8ad3db37cc93ecaf2897f75edc685', {
                                                                             method: 'POST',
@@ -147,8 +147,8 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                                 }
                                             </Swiper>
                                             {/* content */}
-                                            <div className='grid grid-cols-3 gap-5 mt-3'>
-                                                <div className='flex flex-col gap-1 col-span-1'>
+                                            <div className='grid grid-cols-2 gap-5 mt-3'>
+                                                {/* <div className='flex flex-col gap-1 col-span-1'>
                                                     <p>Product Name</p>
                                                     <input
                                                         type="text"
@@ -156,7 +156,7 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                                         value={piece?.name}
                                                         onChange={(e) => updateOrderPiece(index, pieceIndex, 'name', e.target.value)}
                                                     />
-                                                </div>
+                                                </div> */}
                                                 <div className='flex flex-col gap-1 col-span-1'>
                                                     <p>Product Code</p>
                                                     <input
