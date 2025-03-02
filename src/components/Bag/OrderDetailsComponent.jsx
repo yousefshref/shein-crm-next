@@ -96,9 +96,7 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                             <Swiper
                                                 slidesPerView={'auto'}
                                                 spaceBetween={20}
-                                                pagination={{
-                                                    clickable: true,
-                                                }}
+                                                pagination={{ clickable: true }}
                                                 className="mySwiper"
                                             >
                                                 <SwiperSlide
@@ -108,12 +106,45 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                                             const input = document.createElement('input');
                                                             input.type = 'file';
                                                             input.accept = 'image/*';
+                                                            input.multiple = true; // Allow multiple file selection
                                                             input.onchange = async (e) => {
-                                                                const file = e.target.files[0];
-                                                                if (file) {
+                                                                const files = e.target.files;
+                                                                if (files.length) {
+                                                                    const uploadedImages = [];
+                                                                    for (const file of files) {
+                                                                        const formData = new FormData();
+                                                                        formData.append('image', file);
+                                                                        try {
+                                                                            const response = await fetch('https://api.imgbb.com/1/upload?key=e4b8ad3db37cc93ecaf2897f75edc685', {
+                                                                                method: 'POST',
+                                                                                body: formData
+                                                                            });
+                                                                            const result = await response.json();
+                                                                            if (result.success) {
+                                                                                uploadedImages.push(result.data.url);
+                                                                            }
+                                                                        } catch (error) {
+                                                                            console.error('Error uploading image:', error);
+                                                                        }
+                                                                    }
+                                                                    if (uploadedImages.length) {
+                                                                        updateOrderPiece(index, pieceIndex, 'images', [...uploadedImages, ...piece?.images]);
+                                                                    }
+                                                                }
+                                                            };
+                                                            input.click();
+                                                        }
+                                                    }}
+                                                    onDragOver={(e) => e.preventDefault()} // Allow drag-over effect
+                                                    onDrop={async (e) => {
+                                                        e.preventDefault();
+                                                        if (!disabled) {
+                                                            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+                                                            if (files.length) {
+                                                                const uploadedImages = [];
+                                                                for (const file of files) {
                                                                     const formData = new FormData();
                                                                     formData.append('image', file);
-
                                                                     try {
                                                                         const response = await fetch('https://api.imgbb.com/1/upload?key=e4b8ad3db37cc93ecaf2897f75edc685', {
                                                                             method: 'POST',
@@ -121,42 +152,31 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
                                                                         });
                                                                         const result = await response.json();
                                                                         if (result.success) {
-                                                                            const imageUrl = result.data.url;
-                                                                            updateOrderPiece(index, pieceIndex, 'images', [imageUrl, ...piece?.images]);
-                                                                        } else {
-                                                                            console.error('Image upload failed:', result.error);
+                                                                            uploadedImages.push(result.data.url);
                                                                         }
                                                                     } catch (error) {
                                                                         console.error('Error uploading image:', error);
                                                                     }
                                                                 }
-                                                            };
-                                                            input.click();
+                                                                if (uploadedImages.length) {
+                                                                    updateOrderPiece(index, pieceIndex, 'images', [...uploadedImages, ...piece?.images]);
+                                                                }
+                                                            }
                                                         }
                                                     }}
                                                 >
                                                     <ImageIcon size={40} className='text-white absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2' />
                                                 </SwiperSlide>
-                                                {
-                                                    piece?.images?.map((image, i) => (
-                                                        <SwiperSlide key={i} className='relative cursor-pointer w-full max-w-[100px]'>
-                                                            <img src={image || ""} alt="" />
-                                                            <DeleteIcon size={20} className='text-white absolute top-1 right-1 cursor-pointer' onClick={() => deleteOrderPieceImage(index, pieceIndex, i)} />
-                                                        </SwiperSlide>
-                                                    ))
-                                                }
+
+                                                {piece?.images?.map((image, i) => (
+                                                    <SwiperSlide key={i} className='relative cursor-pointer w-full max-w-[100px]'>
+                                                        <img src={image || ""} alt="" />
+                                                        <DeleteIcon size={20} className='text-white absolute top-1 right-1 cursor-pointer' onClick={() => deleteOrderPieceImage(index, pieceIndex, i)} />
+                                                    </SwiperSlide>
+                                                ))}
                                             </Swiper>
                                             {/* content */}
                                             <div className='grid grid-cols-2 gap-5 mt-3'>
-                                                {/* <div className='flex flex-col gap-1 col-span-1'>
-                                                    <p>Product Name</p>
-                                                    <input
-                                                        type="text"
-                                                        className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled}
-                                                        value={piece?.name}
-                                                        onChange={(e) => updateOrderPiece(index, pieceIndex, 'name', e.target.value)}
-                                                    />
-                                                </div> */}
                                                 <div className='flex flex-col gap-1 col-span-1'>
                                                     <p>Product Code</p>
                                                     <input
