@@ -226,7 +226,7 @@ const OrdersSection = ({ page, setPage }) => {
 
                     {/* content */}
                     {/* all pieces */}
-                    <div className="flex flex-col">
+                    <div className="flex flex-col space-y-1">
                         <p className="text-blue-500 text-sm mb-3">Pieces</p>
                         {openedCustomer?.pieces?.map((piece, pieceId) => (
                             <PieceDetails key={pieceId} piece={piece} />

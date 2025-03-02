@@ -37,8 +37,8 @@ const PieceDetails = ({ piece }) => {
 
             {/* Full-screen overlay with main image slider and thumbnail slider */}
             {open && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black/70 flex flex-col justify-center items-center z-50">
-                    <div className="relative w-full max-w-4xl">
+                <div className="fixed top-0 space-y-1 left-0 w-full h-full bg-black/70 flex flex-col justify-center items-center z-50">
+                    <div className="relative space-y-1 w-full max-w-4xl">
                         {/* Main Swiper */}
                         <Swiper
                             initialSlide={selectedImage}

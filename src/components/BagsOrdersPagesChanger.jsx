@@ -6,6 +6,7 @@ const BagsOrdersPagesChanger = ({ page, setPage }) => {
             <div
                 onClick={() => {
                     setPage('bags')
+                    localStorage.setItem('page', 'bags')
                 }}
                 className={`cursor-pointer transition-all p-2 rounded-xl ${page == 'bags' ? "bg-blue-500 text-white" : "bg-blue-200 text-zinc-700"}`}>
                 Orders
@@ -13,6 +14,7 @@ const BagsOrdersPagesChanger = ({ page, setPage }) => {
             <div
                 onClick={() => {
                     setPage('orders')
+                    localStorage.setItem('page', 'orders')
                 }}
                 className={`cursor-pointer transition-all p-2 rounded-xl ${page == 'bags' ? "bg-blue-200 text-zinc-700" : "bg-blue-500 text-white"}`}>
                 Clients

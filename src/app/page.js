@@ -18,6 +18,10 @@ export default function Home() {
 
   const [page, setPage] = useState("bags");
 
+  useEffect(() => {
+    setPage(localStorage.getItem("page") || "bags");
+  }, [page]);
+
   // dashboard
   return (
     <DashboardLayout>
