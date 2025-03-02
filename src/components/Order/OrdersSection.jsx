@@ -28,7 +28,14 @@ import PieceDetails from '../PieceDetails';
 const OrdersSection = ({ page, setPage }) => {
 
 
-    const { is_seller } = useContext(UserContextProvider);
+    const { is_seller, user } = useContext(UserContextProvider);
+
+    useEffect(() => {
+        if (!user) {
+            toast.error("You are not logged in");
+            window.location.href = "/login";
+        }
+    }, [user]);
 
 
     const { loading, progress, open, setOpen, orders, setOrders, getOrders, fastUpdateOrder, setIsDelivered, updateOrder } =
@@ -63,7 +70,7 @@ const OrdersSection = ({ page, setPage }) => {
             ) : null}
 
             {/* charts */}
-            <ChartsSection />
+            {/* <ChartsSection /> */}
 
             {/* choose orders or orders */}
             <div className="mt-14 grid grid-cols-2 gap-5">
@@ -236,7 +243,7 @@ const OrdersSection = ({ page, setPage }) => {
                         <div className='grid grid-cols-3 items-center gap-5 w-full'>
                             <p><span className="text-sm col-span-1">Customer Name:</span> <span className='font-bold'>{openedCustomer?.customer_name}</span></p>
                             <p><span className="text-sm col-span-1">Customer Number:</span> <span className='font-bold'>{openedCustomer?.customer_number}</span></p>
-                            <p><span className="text-sm col-span-1">Pieces:</span> <span className="font-bold">{openedCustomer?.how_many_pieces ? openedCustomer?.how_many_pieces : openedCustomer?.pieces?.length || 0}</span></p>
+                            <p><span className="text-sm col-span-1">Pieces:</span> <span className="font-bold">{openedCustomer?.how_many_pices > 0 ? openedCustomer?.how_many_pices : openedCustomer?.pieces?.length || 0}</span></p>
                         </div>
                         {openedCustomer?.customer_note ? (
                             <p><span className="text-sm">Notes:</span> <span className='font-bold'>{openedCustomer?.customer_note}</span></p>

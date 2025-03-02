@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useContext, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Plus } from "lucide-react";
@@ -10,14 +10,23 @@ import { UserContextProvider } from '@/app/context/UserContext';
 import SearchSection from '../SearchSection';
 import BagsOrdersPagesChanger from '../BagsOrdersPagesChanger';
 import ChartsSection from '../ChartsSection';
+import { toast } from 'sonner';
 
 
 const BagsSection = ({ page, setPage }) => {
-    const { is_seller } = useContext(UserContextProvider);
+    const { is_seller, user } = useContext(UserContextProvider);
+
+    useEffect(() => {
+        if (!user) {
+            toast.error("You are not logged in");
+            window.location.href = "/login";
+        }
+    }, [user]);
 
 
     const { loading, progress, open, setOpen, bags, setBagDetails, getBag, setOrdersDetails } =
         useContext(BagContextProvider);
+
 
     const [openCalendar, setOpenCalendar] = useState(false);
     const [openSearch, setOpenSearch] = useState(false);
@@ -38,7 +47,7 @@ const BagsSection = ({ page, setPage }) => {
             ) : null}
 
             {/* charts */}
-            <ChartsSection />
+            {/* <ChartsSection /> */}
 
             {/* choose bags or orders */}
             <div className="mt-14 grid grid-cols-2 gap-5">

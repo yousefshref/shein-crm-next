@@ -230,14 +230,22 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                     {/* orders details */}
                     <div className='flex flex-col gap-2'>
                         <p className='font-semibold text-lg'>Orders Details</p>
-                        <button onClick={() => {
-                            if (!bag?.is_closed) {
-                                addNewOrderDetails()
-                            }
-                        }} className={`flex pe-5 w-fit px-3 flex-row items-center gap-2 cursor-pointer hover:bg-green-400 transition-all duration-300 p-1.5 rounded-full justify-center text-white bg-green-500 ${bag?.is_closed ? "opacity-40" : "opacity-100"}`}>
-                            <Plus size={20} />
-                            <p>Add Another Client</p>
-                        </button>
+                        <div className='flex items-center gap-5'>
+                            <button onClick={() => {
+                                if (!bag?.is_closed) {
+                                    addNewOrderDetails()
+                                }
+                            }} className={`flex pe-5 w-fit px-3 flex-row items-center gap-2 cursor-pointer hover:bg-green-400 transition-all duration-300 p-1.5 rounded-full justify-center text-white bg-green-500 ${bag?.is_closed ? "opacity-40" : "opacity-100"}`}>
+                                <Plus size={20} />
+                                <p>Add Another Client</p>
+                            </button>
+                            <Button onClick={() => createOrUpdateBag()} type="submit">Done</Button>
+                            <Button onClick={() => {
+                                if (window.confirm('Are you sure you want to delete this bag?')) {
+                                    deleteBag(bag?.id)
+                                }
+                            }} type="submit" variant={'destructive'}>Delete</Button>
+                        </div>
                         {ordersDetails?.length > 0 ? ordersDetails?.map((order, index) => (
                             <OrderDetailsComponent disabled={bag?.is_closed} key={index} order={order} index={index} />
                         )) : (
@@ -247,11 +255,6 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                         )}
                     </div>
                 </div>
-
-                <DialogFooter className={'w-fit me-auto mt-auto'}>
-                    <Button onClick={() => createOrUpdateBag()} type="submit">Done</Button>
-                    <Button onClick={() => deleteBag(bag?.id)} type="submit" variant={'destructive'}>Delete</Button>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

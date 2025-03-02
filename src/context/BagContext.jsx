@@ -55,6 +55,8 @@ const BagContext = ({ children }) => {
                     },
                     params: bagParams
                 })
+                console.log(res.data);
+
                 setProgress(50)
                 setBags(res.data)
             } catch (error) {
@@ -229,12 +231,12 @@ const BagContext = ({ children }) => {
         const priceAfterDiscountSar = totalSar - Number(bagDetails.discount_in_sar);
 
         // 3. Calculate profit: total pieces price minus (price after discount + shipping cost)
-        const profitEgp = totalEgp - priceAfterDiscountEgp - Number(bagDetails.shipping_cost_in_egp);
-        const profitSar = totalSar - priceAfterDiscountSar - Number(bagDetails.shipping_cost_in_sar);
+        const profitEgp = totalEgp - Number(bagDetails.discount_in_egp) - Number(bagDetails.shipping_cost_in_egp);
+        const profitSar = totalSar - Number(bagDetails.discount_in_sar) - Number(bagDetails.shipping_cost_in_sar);
 
         // 4. Calculate xg using the formula: profit_in_egp / (price_after_discount in SAR)
         // Avoid division by zero by checking priceAfterDiscountSar
-        const xg = priceAfterDiscountSar !== 0 ? profitEgp / priceAfterDiscountSar : 0;
+        const xg = priceAfterDiscountSar !== 0 ? totalSar / profitEgp : 0;
 
         // 5. Update bagDetails with new values
         setBagDetails(prev => {

@@ -73,7 +73,7 @@ const page = () => {
                 )}
                 {/* employees */}
                 <div className='flex items-center gap-5 justify-between mt-10'>
-                    <h3 className='text-2xl font-bold text-zinc-800'>موظفين المبيعات</h3>
+                    <h3 className='text-2xl font-bold text-zinc-800'>Employees</h3>
                     <button onClick={() => {
                         setOpen(true)
                         setEmployee({})
@@ -108,7 +108,7 @@ const page = () => {
                 <ShippingCouriersSettings />
 
                 {/* order statuses */}
-                <OrderStatusesSettings />
+                {/* <OrderStatusesSettings /> */}
             </div>
         </DashboardLayout>
     )

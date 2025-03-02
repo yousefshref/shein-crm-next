@@ -22,8 +22,6 @@ const SearchSection = ({
         updateBagParams
     } = useContext(BagContextProvider);
 
-    console.log(bagParams);
-    
     return (
         <div className="flex gap-10 items-center">
             <p className="text-[#6C85FF]">Search By</p>
@@ -53,10 +51,10 @@ const SearchSection = ({
                 <>
                     <div
                         onClick={() => {
-                            if(bagParams?.is_closed == 'true'){
+                            if (bagParams?.is_closed == 'true') {
                                 toast.success('Filter Opened Orders')
                                 updateBagParams('is_closed', 'false')
-                            }else{
+                            } else {
                                 toast.success('Filter Only Closed Orders')
                                 updateBagParams('is_closed', 'true')
                             }
@@ -66,7 +64,7 @@ const SearchSection = ({
                         {
                             bagParams?.is_closed == 'true' ?
                                 <CircleX className="w-full" />
-                            :
+                                :
                                 <Check className="w-full" />
                         }
                     </div>

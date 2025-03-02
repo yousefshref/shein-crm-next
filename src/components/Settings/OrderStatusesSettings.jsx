@@ -58,7 +58,7 @@ const OrderStatusesSettings = () => {
     return (
         <div className='flex flex-col'>
             <div className='flex items-center gap-5 justify-between mt-20'>
-                <h3 className='text-2xl font-bold text-zinc-800'>حالات الطلبات</h3>
+                <h3 className='text-2xl font-bold text-zinc-800'>Order Statuses</h3>
                 <button onClick={() => {
                     setOpen(true)
                     setOrderStatus({})
