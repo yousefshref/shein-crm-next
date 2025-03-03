@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dialog"
 
 import PieceDetails from '../PieceDetails';
+import CreateOrUpdateOrder from './CreateOrUpdateOrder';
+import { BagContextProvider } from '@/context/BagContext';
 
 
 const OrdersSection = ({ page, setPage }) => {
@@ -55,6 +57,10 @@ const OrdersSection = ({ page, setPage }) => {
 
     const [openedCustomer, setOpenedCustomer] = useState(null);
 
+
+    const [openBag, setOpenBag] = useState(false);
+    const {setBag,  getBag} = useContext(BagContextProvider)
+    const [order, setOrder] = useState(null);
 
     return (
         <div
@@ -150,8 +156,11 @@ const OrdersSection = ({ page, setPage }) => {
 
                         >
                             <p
-                                onClick={() => {
-                                    setOpenedCustomer(order)
+                                onClick={async() => {
+                                    const bag = await getBag(order?.bag)
+                                    setBag(bag)
+                                    setOpenBag(true)
+                                    setOrder(order)
                                 }}
                                 className="col-span-1">{order?.bag_name}</p>
                             <p
@@ -206,6 +215,8 @@ const OrdersSection = ({ page, setPage }) => {
                     ))
                 )}
             </div>
+
+            <CreateOrUpdateBag open={openBag} setOpen={setOpenBag} clickedOrder={order} />
 
             {/* pop the data */}
             <Dialog open={openedCustomer}>

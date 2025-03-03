@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
 
-const OrderDetailsComponent = ({ index, order, disabled }) => {
+const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) => {
     const { updateOrderDetails, addNewOrderPiece, updateOrderPiece, deleteOrderPiece, deleteOrderDetails, deleteOrderPieceImage } = useContext(BagContextProvider)
 
     const { sellers } = useContext(SellersContextProvider)
@@ -23,19 +23,31 @@ const OrderDetailsComponent = ({ index, order, disabled }) => {
         }
     }, [sellers])
 
+    useEffect(() => {
+        if (clickedOrder && clickedOrder !== null) {
+            const element = document.querySelector(`#orderDetails-${clickedOrder?.id}`)
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' })
+                console.log('exist element');   
+            }else{
+                console.log('not exist element');   
+            }
+        }
+    }, [clickedOrder])
+
     return (
-        <Collapsible>
-            <CollapsibleTrigger className='p-3 text-start bg-blue-100 rounded-xl w-full grid grid-cols-3'>
+        <Collapsible id={`orderDetails-${order?.id}`}>
+            <CollapsibleTrigger className={`p-3 text-start bg-blue-100 rounded-xl w-full grid grid-cols-3 ${clickedOrder?.id == order?.id ? "bg-blue-500 text-white" : ""}`}>
                 <div className='flex flex-col -space-y-1'>
-                    <p className='text-sm text-gray-500'>Name</p>
+                    <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Name</p>
                     <p>{order?.customer_name}</p>
                 </div>
                 <div className='flex flex-col -space-y-1'>
-                    <p className='text-sm text-gray-500'>Number</p>
+                    <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Number</p>
                     <p>{order?.customer_number}</p>
                 </div>
                 <div className='flex flex-col -space-y-1'>
-                    <p className='text-sm text-gray-500'>Total</p>
+                    <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Total</p>
                     <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0)} EGP</p>
                     <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0) || 0)} SAR</p>
                 </div>

@@ -15,3 +15,7 @@ make the plus of customer be above not bottom ✅
 dates filteration ✅
 
 
+total pieces in the order ✅
+on click on the customer open the order to update
+
+

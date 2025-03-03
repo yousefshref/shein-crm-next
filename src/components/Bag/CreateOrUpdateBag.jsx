@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import {
     Dialog,
@@ -16,7 +16,7 @@ import { Plus } from 'lucide-react'
 import OrderDetailsComponent from './OrderDetailsComponent'
 
 
-const CreateOrUpdateBag = ({ open, setOpen }) => {
+const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
     const {
         bagDetails,
         ordersDetails,
@@ -49,6 +49,22 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
             setOrdersDetails(bag?.orders_details)
         }
     }, [bag])
+
+
+    const [totalOrderPieces, setTotalOrderPieces] = useState(0)
+
+    useEffect(() => {
+        let total = 0
+        bagDetails?.orders_details?.map((order) => {
+            if(order?.how_many_pices && order?.how_many_pices > 0){
+                total += order?.how_many_pices
+            }else{
+                total += order?.pieces?.length
+            }
+        })
+        setTotalOrderPieces(total)
+    }, [bagDetails, bagDetails?.orders_details?.length])
+
 
     return (
         <Dialog open={open}>
@@ -229,7 +245,7 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                     <hr className='my-5' />
                     {/* orders details */}
                     <div className='flex flex-col gap-2'>
-                        <p className='font-semibold text-lg'>Orders Details</p>
+                        <p className='font-semibold text-lg'>Orders Details -- Total Pieces {totalOrderPieces}</p>
                         <div className='flex items-center gap-5'>
                             <button onClick={() => {
                                 if (!bag?.is_closed) {
@@ -247,7 +263,7 @@ const CreateOrUpdateBag = ({ open, setOpen }) => {
                             }} type="submit" variant={'destructive'}>Delete</Button>
                         </div>
                         {ordersDetails?.length > 0 ? ordersDetails?.map((order, index) => (
-                            <OrderDetailsComponent disabled={bag?.is_closed} key={index} order={order} index={index} />
+                            <OrderDetailsComponent clickedOrder={clickedOrder} disabled={bag?.is_closed} key={index} order={order} index={index} />
                         )) : (
                             <div className='w-full flex justify-center py-4 items-center rounded-xl p-2 bg-yellow-100 text-yellow-500 text-lg'>
                                 <p>No orders found, Click on Plus icon to add orders</p>

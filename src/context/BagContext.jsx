@@ -55,8 +55,6 @@ const BagContext = ({ children }) => {
                     },
                     params: bagParams
                 })
-                console.log(res.data);
-
                 setProgress(50)
                 setBags(res.data)
             } catch (error) {
@@ -315,7 +313,7 @@ const BagContext = ({ children }) => {
                 }
             })
             setBag(res.data)
-            console.log(res);
+            return res.data
         } catch (error) {
             console.error(error)
         }
