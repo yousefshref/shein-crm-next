@@ -20,6 +20,7 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
         if (sellers.length > 0) {
             const names = sellers.map(seller => seller?.user_username)
             setSellersNames(names)
+            console.log(names);
         }
     }, [sellers])
 
@@ -240,7 +241,7 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
                         <p className='font-medium text-blue-500'>Order Status</p>
                         <div className='flex flex-col gap-1'>
                             <p>Seller</p>
-                            <SearchDropdown disabled={disabled} items={sellersNames} placeholder='Select Seller...' onSelect={(e) => updateOrderDetails(index, 'seller', e)} />
+                            <SearchDropdown defaultValue={sellers.find(seller => seller.id == order?.seller)?.user_username || ""} disabled={disabled} items={sellersNames} placeholder='Select Seller...' onSelect={(e) => updateOrderDetails(index, 'seller', e)} />
                         </div>
                         <div className='grid grid-cols-2 gap-5'>
                             <div className='flex flex-col gap-2'>
