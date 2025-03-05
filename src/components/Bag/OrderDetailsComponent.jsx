@@ -40,8 +40,8 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
         <Collapsible id={`orderDetails-${order?.id}`}>
             <CollapsibleTrigger className={`p-3 text-start bg-blue-100 rounded-xl w-full grid grid-cols-3 ${clickedOrder?.id == order?.id ? "bg-blue-500 text-white" : ""}`}>
                 <div className='flex flex-col -space-y-1'>
-                    <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Name</p>
-                    <p>{order?.customer_name}</p>
+                    <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Pieces No.</p>
+                    <p>{order?.how_many_pices || order?.pieces?.length}</p>
                 </div>
                 <div className='flex flex-col -space-y-1'>
                     <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Number</p>
@@ -50,7 +50,7 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
                 <div className='flex flex-col -space-y-1'>
                     <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Total</p>
                     <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0)} EGP</p>
-                    <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0) || 0)} SAR</p>
+                    {/* <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0) || 0)} SAR</p> */}
                 </div>
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -210,7 +210,7 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
                                                         />
                                                         <span className='absolute right-2 top-1 text-gray-800'>EGP</span>
                                                     </div>
-                                                    <div className='relative'>
+                                                    {/* <div className='relative'>
                                                         <input
                                                             type="text"
                                                             className={`input-white w-full ${disabled ? "cursor-not-allowed" : ""}`}
@@ -218,7 +218,7 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
                                                             onChange={(e) => updateOrderPiece(index, pieceIndex, 'price_in_sar', e.target.value)}
                                                         />
                                                         <span className='absolute right-2 top-1 text-gray-800'>SAR</span>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>

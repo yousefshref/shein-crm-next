@@ -63,7 +63,7 @@ const ChartsComponent = ({ open, setOpen }) => {
         if (open) {
             getData()
         }
-    }, [date_from, date_to, sales_id, customer_number, order_status, is_collected, year])
+    }, [date_from, date_to, sales_id, customer_number, order_status, is_collected, year, open])
 
 
 
@@ -84,7 +84,7 @@ const ChartsComponent = ({ open, setOpen }) => {
         labels: months,
         datasets: [
             {
-                label: "عدد الطلبات",
+                label: `عدد الطلبات`,
                 data: ordersData?.map((o) => o?.total_orders_count), // Values for bars
                 backgroundColor: "rgba(54, 162, 235, 0.6)", // Blue bars
             },
@@ -96,7 +96,7 @@ const ChartsComponent = ({ open, setOpen }) => {
             // },
             {
                 label: "مجموع الطلبات بالمصري",
-                data: ordersData?.map((o) => o?.total_orders_egp), // Values for bars
+                data: ordersData?.map((o) => o?.total_price), // Values for bars
                 backgroundColor: "#ff3838", // Red bars
             },
             // {
@@ -107,12 +107,12 @@ const ChartsComponent = ({ open, setOpen }) => {
             // },
             {
                 label: "مجموع الارباح بالمصري",
-                data: ordersData?.map((o) => o?.total_profit_egp), // Values for bars
+                data: ordersData?.map((o) => o?.total_profit), // Values for bars
                 backgroundColor: "#38ff6a", // Blue bars
             },
             {
-                label: "مجموع الشحن",
-                data: ordersData?.map((o) => o?.total_shipping_cost), // Values for bars
+                label: "XG",
+                data: ordersData?.map((o) => o?.total_xg), // Values for bars
                 backgroundColor: "#ffe438", // Blue bars
             },
         ],

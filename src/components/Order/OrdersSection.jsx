@@ -76,7 +76,7 @@ const OrdersSection = ({ page, setPage }) => {
             ) : null}
 
             {/* charts */}
-            {/* <ChartsSection /> */}
+            <ChartsSection />
 
             {/* choose orders or orders */}
             <div className="mt-14 grid grid-cols-2 gap-5">

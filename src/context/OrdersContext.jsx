@@ -68,6 +68,25 @@ const OrdersContext = ({ children }) => {
     }
 
 
+
+    const getOrder = async (id) => {
+        try {
+            const res = await axios.get(`${server}orders/${id}/`, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem('token')}`
+                }
+            })
+            return res.data
+        } catch (error) {
+            console.error(error)
+            if (error.response.status == 401) {
+                localStorage.removeItem('token')
+                window.location.href = '/login'
+            }
+        }
+    }
+
+
     // data
     const [customer_name, setCustomerName] = React.useState('')
     const [customer_phone, setCustomerPhone] = React.useState('')
@@ -303,6 +322,8 @@ const OrdersContext = ({ children }) => {
             ordersParams, setOrdersParams,
             updateOrdersParams,
             getOrders,
+
+            getOrder,
 
             createOrder,
 

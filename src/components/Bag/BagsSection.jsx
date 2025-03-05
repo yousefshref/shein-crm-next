@@ -11,10 +11,12 @@ import SearchSection from '../SearchSection';
 import BagsOrdersPagesChanger from '../BagsOrdersPagesChanger';
 import ChartsSection from '../ChartsSection';
 import { toast } from 'sonner';
+import { OrdersContextProvider } from '@/context/OrdersContext';
 
 
 const BagsSection = ({ page, setPage }) => {
     const { is_seller, user } = useContext(UserContextProvider);
+    const { getOrder } = useContext(OrdersContextProvider);
 
     useEffect(() => {
         if (!user) {
@@ -32,7 +34,7 @@ const BagsSection = ({ page, setPage }) => {
     const [openSearch, setOpenSearch] = useState(false);
     const [openTruck, setOpenTruck] = useState(false);
 
-
+        
     return (
         <div
             className={`relative flex flex-col transition-all duration-500
@@ -47,7 +49,7 @@ const BagsSection = ({ page, setPage }) => {
             ) : null}
 
             {/* charts */}
-            {/* <ChartsSection /> */}
+            <ChartsSection />
 
             {/* choose bags or orders */}
             <div className="mt-14 grid grid-cols-2 gap-5">
@@ -165,8 +167,8 @@ const BagsSection = ({ page, setPage }) => {
                     <p className="col-span-1">Name</p>
                     <p className="col-span-1">Date</p>
                     <p className="col-span-1">Price</p>
-                    <p className="col-span-1">Weight</p>
-                    <p className="col-span-1">Shipping Cost</p>
+                    <p className="col-span-1">Total Paid</p>
+                    <p className="col-span-1">Pieces</p>
                     <p className="col-span-1">Shipping Company</p>
                     {is_seller ? null : (
                         <>
@@ -198,23 +200,30 @@ const BagsSection = ({ page, setPage }) => {
                                         <span>{formatNumber(bag?.price_in_egp)}</span>
                                         <span>EGP</span>
                                     </span>
-                                    <span className="grid grid-cols-2">
+                                    {/* <span className="grid grid-cols-2">
                                         <span>{formatNumber(bag?.price_in_sar)}</span>
                                         <span>SAR</span>
+                                    </span> */}
+                                </span>
+                            </p>
+                            <p className="col-span-1">
+                                <span className="flex flex-col space-y-2">
+                                    <span className="grid grid-cols-2">
+                                        <span>{formatNumber(bag?.total_paid_in_egp)}</span>
+                                        <span>EGP</span>
                                     </span>
                                 </span>
                             </p>
-                            <p className="col-span-1">{bag?.weight}</p>
                             <p className="col-span-1">
                                 <span className="flex flex-col space-y-2">
                                     <span className="grid grid-cols-2">
                                         <span>{formatNumber(bag?.shipping_cost_in_egp)}</span>
                                         <span>EGP</span>
                                     </span>
-                                    <span className="grid grid-cols-2">
+                                    {/* <span className="grid grid-cols-2">
                                         <span>{formatNumber(bag?.shipping_cost_in_sar)}</span>
                                         <span>SAR</span>
-                                    </span>
+                                    </span> */}
                                 </span>
                             </p>
                             <p className="col-span-1">
@@ -227,10 +236,10 @@ const BagsSection = ({ page, setPage }) => {
                                             <span>{formatNumber(bag?.profit_in_egp)}</span>
                                             <span>EGP</span>
                                         </span>
-                                        <span className="grid grid-cols-2">
+                                        {/* <span className="grid grid-cols-2">
                                             <span>{formatNumber(bag?.profit_in_sar)}</span>
                                             <span>SAR</span>
-                                        </span>
+                                        </span> */}
                                     </p>
                                     <p className="col-span-1">{bag?.xg || "None"}</p>
                                 </>
