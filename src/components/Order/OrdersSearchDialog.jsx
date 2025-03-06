@@ -41,10 +41,10 @@ const OrdersSearchDialog = ({ open, setOpen }) => {
                             ))}
                         </select>
                     </div>
-                    <div className='flex flex-col gap-1'>
+                    {/* <div className='flex flex-col gap-1'>
                         <p className='text-gray-500 text-sm'>Customer Name</p>
                         <Input value={ordersParams?.customer_name} onChange={(e) => updateOrdersParams('customer_name', e.target.value)} placeholder='Customer Name' />
-                    </div>
+                    </div> */}
                     <div className='flex flex-col gap-1'>
                         <p className='text-gray-500 text-sm'>Customer Number</p>
                         <Input value={ordersParams?.customer_number} onChange={(e) => updateOrdersParams('customer_number', e.target.value)} placeholder='Customer Number' />

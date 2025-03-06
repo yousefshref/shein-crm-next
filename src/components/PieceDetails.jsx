@@ -32,7 +32,7 @@ const PieceDetails = ({ piece }) => {
                 {/* <p className="text-xs">{piece?.name}</p> */}
                 <p className="text-xs">{piece?.code}</p>
                 <p className="text-xs">{piece?.price_in_egp} EGP</p>
-                <p className="text-xs">{piece?.price_in_sar} SAR</p>
+                {/* <p className="text-xs">{piece?.price_in_sar} SAR</p> */}
             </div>
 
             {/* Full-screen overlay with main image slider and thumbnail slider */}

@@ -62,6 +62,7 @@ const OrdersSection = ({ page, setPage }) => {
     const {setBag,  getBag} = useContext(BagContextProvider)
     const [order, setOrder] = useState(null);
 
+
     return (
         <div
             className={`relative flex flex-col transition-all duration-500
@@ -114,14 +115,14 @@ const OrdersSection = ({ page, setPage }) => {
                                 </span>
                                 <span>EGP</span>
                             </p>
-                            <p className="text-zinc-500 text-sm grid grid-cols-2">
+                            {/* <p className="text-zinc-500 text-sm grid grid-cols-2">
                                 <span>
                                     {formatNumber(
                                         orders?.map((order) => order?.pieces)?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0)
                                     )}
                                 </span>
                                 <span>SAR</span>
-                            </p>
+                            </p> */}
                         </div>
                     </>
                 )}
@@ -130,11 +131,11 @@ const OrdersSection = ({ page, setPage }) => {
 
             {/* orders list */}
             <div className="mt-20 flex flex-col gap-5">
-                <div className={`${is_seller ? "grid grid-cols-8" : "grid grid-cols-9"
+                <div className={`${"grid grid-cols-8"
                     } gap-10 md:text-sm text-xs font-bold`}
                 >
                     <p className="col-span-1">Order</p>
-                    <p className="col-span-1">Customer Name</p>
+                    {/* <p className="col-span-1">Customer Name</p> */}
                     <p className="col-span-1">Customer Number</p>
                     <p className="col-span-1">Paid</p>
                     <p className="col-span-1">Remaining</p>
@@ -151,7 +152,7 @@ const OrdersSection = ({ page, setPage }) => {
                     orders?.map((order) => (
                         <div
                             key={order?.id}
-                            className={`${is_seller ? "grid grid-cols-8" : "grid grid-cols-9"
+                            className={`${"grid grid-cols-8"
                                 } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
 
                         >
@@ -163,10 +164,10 @@ const OrdersSection = ({ page, setPage }) => {
                                     setOrder(order)
                                 }}
                                 className="col-span-1">{order?.bag_name}</p>
-                            <p
+                            {/* <p
                                 onClick={() => {
                                     setOpenedCustomer(order)
-                                }} className="col-span-1">{order?.customer_name}</p>
+                                }} className="col-span-1">{order?.customer_name}</p> */}
                             <p
                                 onClick={() => {
                                     setOpenedCustomer(order)
@@ -251,10 +252,10 @@ const OrdersSection = ({ page, setPage }) => {
                             ) : null}
                             <p className='col-span-1'><span className='text-sm'>Bag Name:</span> <span className='font-bold'>{openedCustomer?.bag_name}</span></p>
                         </div>
-                        <div className='grid grid-cols-3 items-center gap-5 w-full'>
-                            <p><span className="text-sm col-span-1">Customer Name:</span> <span className='font-bold'>{openedCustomer?.customer_name}</span></p>
+                        <div className='grid grid-cols-2 items-center gap-5 w-full'>
+                            {/* <p><span className="text-sm col-span-1">Customer Name:</span> <span className='font-bold'>{openedCustomer?.customer_name}</span></p> */}
                             <p><span className="text-sm col-span-1">Customer Number:</span> <span className='font-bold'>{openedCustomer?.customer_number}</span></p>
-                            <p><span className="text-sm col-span-1">Pieces:</span> <span className="font-bold">{openedCustomer?.how_many_pices > 0 ? openedCustomer?.how_many_pices : openedCustomer?.pieces?.length || 0}</span></p>
+                            <p><span className="text-sm col-span-1">Pieces:</span> <span className="font-bold">{openedCustomer?.how_many_pices || openedCustomer?.pieces?.length}</span></p>
                         </div>
                         {openedCustomer?.customer_note ? (
                             <p><span className="text-sm">Notes:</span> <span className='font-bold'>{openedCustomer?.customer_note}</span></p>

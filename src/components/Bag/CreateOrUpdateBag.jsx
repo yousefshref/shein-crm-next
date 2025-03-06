@@ -14,6 +14,7 @@ import SearchDropdown from '../SearchDropdown'
 import { Button } from '../ui/button'
 import { Plus } from 'lucide-react'
 import OrderDetailsComponent from './OrderDetailsComponent'
+import { UserContextProvider } from '@/app/context/UserContext'
 
 
 const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
@@ -33,6 +34,8 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
         setOrdersDetails,
     } = useContext(BagContextProvider)
 
+    const {is_seller} = useContext(UserContextProvider)
+
 
     const { shipping_companies } = useContext(ShippingCompaniesContextProvider)
     const [shippingCompaniesNames, setShippingCompaniesNames] = React.useState([])
@@ -47,6 +50,7 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
         if (bag) {
             setBagDetails({ ...bag, shipping_company: bag?.shipping_company_name })
             setOrdersDetails(bag?.orders_details)
+            console.log(bag);
         }
     }, [bag])
 
@@ -203,7 +207,8 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>SAR</span>
                                     </div>
                                 </div>
-                                <div className='flex flex-col gap-3'>
+                                {is_seller ? null : (
+                                    <div className='flex flex-col gap-3'>
                                     <p>Profit</p>
                                     <div className='relative w-full'>
                                         <input
@@ -224,15 +229,20 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>SAR</span>
                                     </div> */}
                                 </div>
+                                )}
                             </div>
-                            <div className='col-span-1 flex flex-col gap-3 mt-4'>
-                                <p>XG</p>
-                                <input
-                                    disabled={bag?.is_closed}
-                                    value={bagDetails?.xg}
-                                    onChange={(e) => updateBagDetails('xg', e.target.value)}
-                                    type="number" className={`input-primary ${bag?.is_closed ? "cursor-not-allowed" : ""}`} />
-                            </div>
+                            {
+                                is_seller ? null : (
+                                    <div className='col-span-1 flex flex-col gap-3 mt-4'>
+                                        <p>XG</p>
+                                        <input
+                                            disabled={bag?.is_closed}
+                                            value={bagDetails?.xg}
+                                            onChange={(e) => updateBagDetails('xg', e.target.value)}
+                                            type="number" className={`input-primary ${bag?.is_closed ? "cursor-not-allowed" : ""}`} />
+                                    </div>
+                                )
+                            }
 
                             {/* closing the order */}
                             <div className='mt-4 flex items-center gap-4'>
@@ -255,7 +265,13 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                                 <Plus size={20} />
                                 <p>Add Another Client</p>
                             </button>
-                            <Button onClick={() => createOrUpdateBag()} type="submit">Done</Button>
+                            <Button onClick={() => {
+                                createOrUpdateBag().then((res) => {
+                                    if(res) {
+                                        setOpen(false)
+                                    }
+                                })
+                            }} type="submit">Done</Button>
                             <Button onClick={() => {
                                 if (window.confirm('Are you sure you want to delete this bag?')) {
                                     deleteBag(bag?.id)

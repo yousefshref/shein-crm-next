@@ -61,10 +61,10 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
                     <div className='flex flex-col gap-2'>
                         <p className='font-medium text-blue-500'>Customer Details</p>
                         <div className='grid grid-cols-3 gap-5'>
-                            <div className='flex flex-col gap-1'>
+                            {/* <div className='flex flex-col gap-1'>
                                 <p>Customer Name</p>
                                 <input className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled} type="text" value={order?.customer_name} onChange={(e) => updateOrderDetails(index, 'customer_name', e.target.value)} />
-                            </div>
+                            </div> */}
                             <div className='flex flex-col gap-1'>
                                 <p>Customer Number</p>
                                 <input className={`input-white ${disabled ? "cursor-not-allowed" : ""}`} disabled={disabled} type="text" value={order?.customer_number} onChange={(e) => updateOrderDetails(index, 'customer_number', e.target.value)} />
@@ -241,7 +241,13 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
                         <p className='font-medium text-blue-500'>Order Status</p>
                         <div className='flex flex-col gap-1'>
                             <p>Seller</p>
-                            <SearchDropdown defaultValue={sellers.find(seller => seller.id == order?.seller)?.user_username || ""} disabled={disabled} items={sellersNames} placeholder='Select Seller...' onSelect={(e) => updateOrderDetails(index, 'seller', e)} />
+                            {/* <SearchDropdown defaultValue={sellers.find(seller => seller.id == order?.seller)?.user_username || ""} disabled={disabled} items={sellersNames} placeholder='Select Seller...' onSelect={(e) => updateOrderDetails(index, 'seller', e)} /> */}
+                            <select disabled={disabled} value={order?.seller_name} onChange={(e) => updateOrderDetails(index, 'seller', e.target.value)} className='input-white'>
+                                <option value={""}>{"Select Seller..."}</option>
+                                {sellers?.map((seller) => (
+                                    <option key={seller?.id} value={seller?.user_username}>{seller?.user_username}</option>
+                                ))}
+                            </select>
                         </div>
                         <div className='grid grid-cols-2 gap-5'>
                             <div className='flex flex-col gap-2'>
