@@ -20,19 +20,20 @@ const BagContext = ({ children }) => {
 
     const getLast7Days = () => {
         const date = new Date();
-        date.setDate(date.getDate() - 30);
+        date.setDate(date.getDate() - 15);
         return date.toISOString().split('T')[0];
     };
-
-    const getToday = () => {
-        return new Date().toISOString().split('T')[0];
+    const getAfter7Days = () => {
+        const date = new Date();
+        date.setDate(date.getDate() + 15);
+        return date.toISOString().split('T')[0];
     };
 
     const [bags, setBags] = React.useState([])
 
     const [bagParams, setBagParams] = React.useState({
         date_from: getLast7Days(),
-        date_to: getToday(),
+        date_to: getAfter7Days(),
 
         is_closed: 'false',
 
@@ -215,7 +216,7 @@ const BagContext = ({ children }) => {
         ordersDetails.forEach(order => {
             order.pieces.forEach(piece => {
                 totalEgp += Number(piece.price_in_egp);
-                totalSar += Number(piece.price_in_sar);
+                // totalSar += Number(piece.price_in_sar);
             });
         });
         return { totalEgp, totalSar };
@@ -248,10 +249,10 @@ const BagContext = ({ children }) => {
                 updated.price_in_egp = totalEgp;
                 shouldUpdate = true;
             }
-            if (prev.price_in_sar !== totalSar) {
-                updated.price_in_sar = totalSar;
-                shouldUpdate = true;
-            }
+            // if (prev.price_in_sar !== totalSar) {
+            //     updated.price_in_sar = totalSar;
+            //     shouldUpdate = true;
+            // }
 
             // Update profit values
             if (prev.profit_in_egp !== profitEgp || prev.profit_in_sar !== profitSar) {
@@ -274,7 +275,7 @@ const BagContext = ({ children }) => {
             let orderTotalSar = 0;
             order.pieces.forEach(piece => {
                 orderTotalEgp += Number(piece.price_in_egp);
-                orderTotalSar += Number(piece.price_in_sar);
+                // orderTotalSar += Number(piece.price_in_sar);
             });
             const newRemainingEgp = orderTotalEgp - Number(order.paid_in_egp);
             const newRemainingSar = orderTotalSar - Number(order.paid_in_sar);

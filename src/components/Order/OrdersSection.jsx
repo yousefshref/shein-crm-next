@@ -40,7 +40,12 @@ const OrdersSection = ({ page, setPage }) => {
     }, [user]);
 
 
-    const { loading, progress, open, setOpen, orders, setOrders, getOrders, fastUpdateOrder, setIsDelivered, updateOrder } =
+    const { 
+        ordersParams, 
+        loading, progress, open, setOpen, 
+        orders, setOrders, getOrders, 
+        fastUpdateOrder, setIsDelivered, updateOrder 
+    } =
         useContext(OrdersContextProvider);
 
     useEffect(() => {
@@ -115,32 +120,91 @@ const OrdersSection = ({ page, setPage }) => {
                                 </span>
                                 <span>EGP</span>
                             </p>
-                            {/* <p className="text-zinc-500 text-sm grid grid-cols-2">
+                            <p className="text-zinc-500 text-sm grid grid-cols-2">
                                 <span>
                                     {formatNumber(
                                         orders?.map((order) => order?.pieces)?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0)
                                     )}
                                 </span>
                                 <span>SAR</span>
-                            </p> */}
+                            </p>
                         </div>
                     </>
+                )}
+                {is_seller ? null : (
+                    ordersParams?.sales_id ? (
+                        <>
+                            <div className="col-span-1 flex flex-col">
+                                <p className="text-[#6C85FF]">Seller Sales</p>
+                                <p className="text-zinc-500 text-sm mt-1 grid grid-cols-2">
+                                    <span>
+                                        {formatNumber(
+                                            orders?.filter(o => o?.seller_id == ordersParams?.sales_id)?.map((order) => order?.pieces)?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0)
+                                        )}
+                                    </span>
+                                    <span>EGP</span>
+                                </p>
+                                <p className="text-zinc-500 text-sm mt-1 grid grid-cols-2">
+                                    <span>
+                                    {
+                                        (() => {
+                                            const total = orders?.map((order) => order?.pieces)
+                                                ?.flat()
+                                                .reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0;
+
+                                            const filteredTotal = orders?.filter(o => o?.seller_id == ordersParams?.sales_id)
+                                                ?.map((order) => order?.pieces)
+                                                ?.flat()
+                                                .reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0;
+
+                                            const percentage = total > 0 ? (total- filteredTotal) : 0;
+
+                                            return `${formatNumber(percentage.toFixed(2))}`;
+                                        })()
+                                    }
+                                    </span>
+                                    <span>EGP</span>
+                                </p>
+                                <p className="text-zinc-500 text-sm mt-1 grid grid-cols-2">
+                                    <span>
+                                    {
+                                        (() => {
+                                            const total = orders?.map((order) => order?.pieces)
+                                                ?.flat()
+                                                .reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0;
+
+                                            const filteredTotal = orders?.filter(o => o?.seller_id == ordersParams?.sales_id)
+                                                ?.map((order) => order?.pieces)
+                                                ?.flat()
+                                                .reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0;
+
+                                            const percentage = total > 0 ? (filteredTotal / total) * 100 : 0;
+
+                                            return `% ${formatNumber(percentage.toFixed(2))}`;
+                                        })()
+                                    }
+                                    </span>
+                                </p>
+                            </div>
+                    </>
+                    ) : null
                 )}
             </div>
 
 
             {/* orders list */}
             <div className="mt-20 flex flex-col gap-5">
-                <div className={`${"grid grid-cols-8"
+                <div className={`${"grid grid-cols-9"
                     } gap-10 md:text-sm text-xs font-bold`}
                 >
                     <p className="col-span-1">Order</p>
-                    {/* <p className="col-span-1">Customer Name</p> */}
                     <p className="col-span-1">Customer Number</p>
+                    <p className="col-span-1">Pieces</p>
                     <p className="col-span-1">Paid</p>
                     <p className="col-span-1">Remaining</p>
                     <p className="col-span-1">Is Delivered</p>
                     <p className="col-span-1">Is Collected</p>
+                    <p className="col-span-1">Seller</p>
                     <p className="col-span-1">Date</p>
                 </div>
 
@@ -152,7 +216,7 @@ const OrdersSection = ({ page, setPage }) => {
                     orders?.map((order) => (
                         <div
                             key={order?.id}
-                            className={`${"grid grid-cols-8"
+                            className={`${"grid grid-cols-9"
                                 } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
 
                         >
@@ -164,14 +228,14 @@ const OrdersSection = ({ page, setPage }) => {
                                     setOrder(order)
                                 }}
                                 className="col-span-1">{order?.bag_name}</p>
-                            {/* <p
-                                onClick={() => {
-                                    setOpenedCustomer(order)
-                                }} className="col-span-1">{order?.customer_name}</p> */}
                             <p
                                 onClick={() => {
                                     setOpenedCustomer(order)
                                 }} className="col-span-1">{order?.customer_number}</p>
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }} className="col-span-1">{order?.how_many_pices ? order?.how_many_pices : order?.pieces?.length}</p>
                             <p
                                 onClick={() => {
                                     setOpenedCustomer(order)
@@ -208,6 +272,10 @@ const OrdersSection = ({ page, setPage }) => {
                                 <option value={true}>Yes</option>
                                 <option value={false}>No</option>
                             </select>
+                            <p
+                                onClick={() => {
+                                    setOpenedCustomer(order)
+                                }} className="col-span-1">{order?.seller ? order?.seller : "No Seller"}</p>
                             <p
                                 onClick={() => {
                                     setOpenedCustomer(order)

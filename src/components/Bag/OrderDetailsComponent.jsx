@@ -50,7 +50,7 @@ const OrderDetailsComponent = ({ index, order, disabled, clickedOrder=null }) =>
                 <div className='flex flex-col -space-y-1'>
                     <p className={`text-sm ${clickedOrder?.id == order?.id ? "text-gray-300" : "text-gray-500"}`}>Total</p>
                     <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0)} EGP</p>
-                    {/* <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0) || 0)} SAR</p> */}
+                    <p>{formatNumber(order?.pieces?.reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0) || 0)} SAR</p>
                 </div>
             </CollapsibleTrigger>
             <CollapsibleContent>

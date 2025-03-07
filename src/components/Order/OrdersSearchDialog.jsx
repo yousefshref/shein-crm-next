@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -8,10 +8,9 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from '../ui/button'
 import { OrdersContextProvider } from '@/context/OrdersContext'
-import axios from 'axios'
-import { server } from '@/app/server'
 import { Input } from '../ui/input'
 import { SellersContextProvider } from '@/context/SellersContext'
+import { UserContextProvider } from '@/app/context/UserContext'
 
 const OrdersSearchDialog = ({ open, setOpen }) => {
     const {
@@ -24,6 +23,8 @@ const OrdersSearchDialog = ({ open, setOpen }) => {
     // add search fields
     const { sellers } = useContext(SellersContextProvider)
 
+    const {is_seller} = useContext(UserContextProvider)
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent>
@@ -32,15 +33,17 @@ const OrdersSearchDialog = ({ open, setOpen }) => {
                 </DialogHeader>
                 {/* content */}
                 <div className='flex flex-col gap-5'>
-                    <div className='flex flex-col gap-1'>
-                        <p className='text-gray-500 text-sm'>Seller</p>
-                        <select value={ordersParams?.sales_id} onChange={(e) => updateOrdersParams('sales_id', e.target.value)} className='input-primary'>
-                            <option value="">All Sellers</option>
-                            {sellers?.map((seller) => (
-                                <option key={seller?.id} value={seller?.id}>{seller?.user_username}</option>
-                            ))}
-                        </select>
-                    </div>
+                    {is_seller ? null : (
+                        <div className='flex flex-col gap-1'>
+                            <p className='text-gray-500 text-sm'>Seller</p>
+                            <select value={ordersParams?.sales_id} onChange={(e) => updateOrdersParams('sales_id', e.target.value)} className='input-primary'>
+                                <option value="">All Sellers</option>
+                                {sellers?.map((seller) => (
+                                    <option key={seller?.id} value={seller?.id}>{seller?.user_username}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                     {/* <div className='flex flex-col gap-1'>
                         <p className='text-gray-500 text-sm'>Customer Name</p>
                         <Input value={ordersParams?.customer_name} onChange={(e) => updateOrdersParams('customer_name', e.target.value)} placeholder='Customer Name' />

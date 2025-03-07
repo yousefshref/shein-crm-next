@@ -90,7 +90,7 @@ const BagsSection = ({ page, setPage }) => {
                                 </span>
                                 <span>EGP</span>
                             </p>
-                            {/* <p className="text-zinc-500 text-sm grid grid-cols-2">
+                            <p className="text-zinc-500 text-sm grid grid-cols-2">
                                 <span>
                                     {formatNumber(
                                         bags?.reduce(
@@ -100,7 +100,7 @@ const BagsSection = ({ page, setPage }) => {
                                     )}
                                 </span>
                                 <span>SAR</span>
-                            </p> */}
+                            </p>
                         </div>
                         <div className="col-span-1 flex flex-col">
                             <p className="text-[#6C85FF]">Total Bags Profit</p>
@@ -200,10 +200,10 @@ const BagsSection = ({ page, setPage }) => {
                                         <span>{formatNumber(bag?.price_in_egp)}</span>
                                         <span>EGP</span>
                                     </span>
-                                    {/* <span className="grid grid-cols-2">
+                                    <span className="grid grid-cols-2">
                                         <span>{formatNumber(bag?.price_in_sar)}</span>
                                         <span>SAR</span>
-                                    </span> */}
+                                    </span>
                                 </span>
                             </p>
                             <p className="col-span-1">

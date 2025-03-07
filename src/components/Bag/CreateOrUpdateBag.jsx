@@ -176,7 +176,7 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                                         />
                                         <span className='absolute right-3 top-1.5 font-bold'>EGP</span>
                                     </div>
-                                    {/* <div className='relative flex flex-col gap-2'>
+                                    <div className='relative flex flex-col gap-2'>
                                         <input
                                             disabled={bag?.is_closed}
                                             value={bagDetails?.price_in_sar}
@@ -184,7 +184,7 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                                             type="text" className={`input-primary w-full ${bag?.is_closed ? "cursor-not-allowed" : ""}`}
                                         />
                                         <span className='absolute right-3 top-1.5 font-bold'>SAR</span>
-                                    </div> */}
+                                    </div>
                                 </div>
                                 <div className='flex col-span-1 flex-col gap-3'>
                                     <p>Price After Discount</p>
