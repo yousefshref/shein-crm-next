@@ -161,17 +161,17 @@ const BagsSection = ({ page, setPage }) => {
             {/* orders list */}
             <div className="mt-5 flex flex-col gap-5">
                 <div
-                    className={`${is_seller ? "grid grid-cols-6" : "grid grid-cols-8"
+                    className={`${is_seller ? "grid grid-cols-2" : "grid grid-cols-8"
                         } gap-10 md:text-sm text-xs font-bold`}
                 >
                     <p className="col-span-1">Name</p>
                     <p className="col-span-1">Date</p>
-                    <p className="col-span-1">Price</p>
-                    <p className="col-span-1">Total Paid</p>
-                    <p className="col-span-1">Pieces</p>
-                    <p className="col-span-1">Shipping Company</p>
                     {is_seller ? null : (
                         <>
+                            <p className="col-span-1">Price</p>
+                            <p className="col-span-1">Total Paid</p>
+                            <p className="col-span-1">Pieces</p>
+                            <p className="col-span-1">Shipping Company</p>
                             <p className="col-span-1">Profit</p>
                             <p className="col-span-1">XG</p>
                         </>
@@ -185,7 +185,7 @@ const BagsSection = ({ page, setPage }) => {
                     bags?.map((bag) => (
                         <div
                             key={bag?.id}
-                            className={`${is_seller ? "grid grid-cols-6" : "grid grid-cols-8"
+                            className={`${is_seller ? "grid grid-cols-2" : "grid grid-cols-8"
                                 } gap-10 md:text-sm text-xs transition-all duration-300 border-b py-3 border-black/30 hover:bg-blue-50 cursor-pointer px-1`}
                             onClick={() => {
                                 setOpen(true);
@@ -194,42 +194,42 @@ const BagsSection = ({ page, setPage }) => {
                         >
                             <p className="col-span-1">{bag?.name}</p>
                             <p className="col-span-1">{bag?.date || "No Date"}</p>
-                            <p className="col-span-1">
-                                <span className="flex flex-col space-y-2">
-                                    <span className="grid grid-cols-2">
-                                        <span>{formatNumber(bag?.price_in_egp)}</span>
-                                        <span>EGP</span>
-                                    </span>
-                                    <span className="grid grid-cols-2">
-                                        <span>{formatNumber(bag?.price_in_sar)}</span>
-                                        <span>SAR</span>
-                                    </span>
-                                </span>
-                            </p>
-                            <p className="col-span-1">
-                                <span className="flex flex-col space-y-2">
-                                    <span className="grid grid-cols-2">
-                                        <span>{formatNumber(bag?.total_paid_in_egp)}</span>
-                                        <span>EGP</span>
-                                    </span>
-                                </span>
-                            </p>
-                            <p className="col-span-1">
-                                <span className="flex flex-col space-y-2">
-                                    <span className="grid grid-cols-2">
-                                        <span>{formatNumber(bag?.total_pieces)}</span>
-                                    </span>
-                                    {/* <span className="grid grid-cols-2">
-                                        <span>{formatNumber(bag?.shipping_cost_in_sar)}</span>
-                                        <span>SAR</span>
-                                    </span> */}
-                                </span>
-                            </p>
-                            <p className="col-span-1">
-                                {bag?.shipping_company_name || "None"}
-                            </p>
                             {is_seller ? null : (
                                 <>
+                                    <p className="col-span-1">
+                                        <span className="flex flex-col space-y-2">
+                                            <span className="grid grid-cols-2">
+                                                <span>{formatNumber(bag?.price_in_egp)}</span>
+                                                <span>EGP</span>
+                                            </span>
+                                            <span className="grid grid-cols-2">
+                                                <span>{formatNumber(bag?.price_in_sar)}</span>
+                                                <span>SAR</span>
+                                            </span>
+                                        </span>
+                                    </p>
+                                    <p className="col-span-1">
+                                        <span className="flex flex-col space-y-2">
+                                            <span className="grid grid-cols-2">
+                                                <span>{formatNumber(bag?.total_paid_in_egp)}</span>
+                                                <span>EGP</span>
+                                            </span>
+                                        </span>
+                                    </p>
+                                    <p className="col-span-1">
+                                        <span className="flex flex-col space-y-2">
+                                            <span className="grid grid-cols-2">
+                                                <span>{formatNumber(bag?.total_pieces)}</span>
+                                            </span>
+                                            {/* <span className="grid grid-cols-2">
+                                                <span>{formatNumber(bag?.shipping_cost_in_sar)}</span>
+                                                <span>SAR</span>
+                                            </span> */}
+                                        </span>
+                                    </p>
+                                    <p className="col-span-1">
+                                        {bag?.shipping_company_name || "None"}
+                                    </p>
                                     <p className="col-span-1 flex flex-col">
                                         <span className="grid grid-cols-2">
                                             <span>{formatNumber(bag?.profit_in_egp)}</span>
