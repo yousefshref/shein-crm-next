@@ -101,7 +101,7 @@ const OrdersSection = ({ page, setPage }) => {
             </div>
 
             {/* order details */}
-            <div className="mt-20 items-start gap-10 grid grid-cols-3">
+            <div className="mt-20 items-start gap-10 grid grid-cols-2">
                 <div className="col-span-1 flex flex-col">
                     <p className="text-[#6C85FF]">Total Clients</p>
                     <p className="text-zinc-500 text-sm mt-1">
@@ -131,7 +131,7 @@ const OrdersSection = ({ page, setPage }) => {
                         </div>
                     </>
                 )}
-                {is_seller ? null : (
+                {/* {is_seller ? null : (
                     ordersParams?.sales_id ? (
                         <>
                             <div className="col-span-1 flex flex-col">
@@ -188,7 +188,7 @@ const OrdersSection = ({ page, setPage }) => {
                             </div>
                     </>
                     ) : null
-                )}
+                )} */}
             </div>
 
 

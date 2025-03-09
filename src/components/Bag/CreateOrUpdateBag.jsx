@@ -117,7 +117,9 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                             </div>
                         </div>
 
-                        <div className='flex flex-col mt-4'>
+                        {is_seller ? null : (
+                            <>
+                            <div className='flex flex-col mt-4'>
                             <p className='font-bold text-blue-500 text-xl'>Shipping Details</p>
                             <div className='grid grid-cols-3 mt-1 gap-5'>
                                 <div className='col-span-1 flex flex-col gap-1'>
@@ -207,8 +209,7 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>SAR</span>
                                     </div>
                                 </div>
-                                {is_seller ? null : (
-                                    <div className='flex flex-col gap-3'>
+                                <div className='flex flex-col gap-3'>
                                     <p>Profit</p>
                                     <div className='relative w-full'>
                                         <input
@@ -229,21 +230,15 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                                         <span className='absolute right-3 top-1.5 font-bold'>SAR</span>
                                     </div> */}
                                 </div>
-                                )}
                             </div>
-                            {
-                                is_seller ? null : (
-                                    <div className='col-span-1 flex flex-col gap-3 mt-4'>
-                                        <p>XG</p>
-                                        <input
-                                            disabled={bag?.is_closed}
-                                            value={bagDetails?.xg}
-                                            onChange={(e) => updateBagDetails('xg', e.target.value)}
-                                            type="number" className={`input-primary ${bag?.is_closed ? "cursor-not-allowed" : ""}`} />
-                                    </div>
-                                )
-                            }
-
+                            <div className='col-span-1 flex flex-col gap-3 mt-4'>
+                                <p>XG</p>
+                                <input
+                                    disabled={bag?.is_closed}
+                                    value={bagDetails?.xg}
+                                    onChange={(e) => updateBagDetails('xg', e.target.value)}
+                                    type="number" className={`input-primary ${bag?.is_closed ? "cursor-not-allowed" : ""}`} />
+                            </div>
                             {/* closing the order */}
                             <div className='mt-4 flex items-center gap-4'>
                                 <input type="checkbox" checked={bagDetails?.is_closed || false} onChange={(e) => updateBagDetails('is_closed', e.target.checked)} />
@@ -251,6 +246,8 @@ const CreateOrUpdateBag = ({ open, setOpen, clickedOrder=null }) => {
                             </div>
 
                         </div>
+                            </>
+                        )}
                     </div>
                     <hr className='my-5' />
                     {/* orders details */}

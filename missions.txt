@@ -1,14 +1,2 @@
-
-
-
-
-
-Total Price_in_egp
-Total Profit
-Total XG
-
-Sellers
-
-
-
-
+- total profit of orders - seller total profit
+- get orders not sellers in

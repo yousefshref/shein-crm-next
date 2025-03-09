@@ -38,6 +38,7 @@ const OrdersSearchDialog = ({ open, setOpen }) => {
                             <p className='text-gray-500 text-sm'>Seller</p>
                             <select value={ordersParams?.sales_id} onChange={(e) => updateOrdersParams('sales_id', e.target.value)} className='input-primary'>
                                 <option value="">All Sellers</option>
+                                <option value="no">Orders With No Sellers</option>
                                 {sellers?.map((seller) => (
                                     <option key={seller?.id} value={seller?.id}>{seller?.user_username}</option>
                                 ))}
