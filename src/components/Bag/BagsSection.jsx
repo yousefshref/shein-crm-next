@@ -26,13 +26,20 @@ const BagsSection = ({ page, setPage }) => {
     }, [user]);
 
 
-    const { loading, progress, open, setOpen, bags, setBagDetails, getBag, setOrdersDetails } =
+    const { 
+        loading, progress, open, setOpen, bags, setBagDetails, getBag, setOrdersDetails, 
+        bags_profit_egp, orders_profit_egp } =
         useContext(BagContextProvider);
 
 
     const [openCalendar, setOpenCalendar] = useState(false);
     const [openSearch, setOpenSearch] = useState(false);
     const [openTruck, setOpenTruck] = useState(false);
+
+
+    const totalProfitEgp = bags_profit_egp;
+    const sellerProfitEgp = orders_profit_egp;
+    const profitPercentage = totalProfitEgp !== 0 ? (sellerProfitEgp / totalProfitEgp) * 100 : 0;
 
         
     return (
@@ -104,6 +111,7 @@ const BagsSection = ({ page, setPage }) => {
                         </div>
                         <div className="col-span-1 flex flex-col">
                             <p className="text-[#6C85FF]">Total Bags Profit</p>
+                            {/* total bags profits */}
                             <p className="text-zinc-500 text-sm grid grid-cols-2">
                                 <span>
                                     {formatNumber(
@@ -115,17 +123,17 @@ const BagsSection = ({ page, setPage }) => {
                                 </span>
                                 <span>EGP</span>
                             </p>
-                            {/* <p className="text-zinc-500 text-sm grid grid-cols-2 mt-1">
+                            {/* seller profits */}
+                            <p className="text-zinc-500 text-sm grid grid-cols-2">
                                 <span>
-                                    {formatNumber(
-                                        bags?.reduce(
-                                            (total, bag) => total + Number(bag?.profit_in_sar),
-                                            0
-                                        )
-                                    )}
+                                    {formatNumber(orders_profit_egp)}
                                 </span>
-                                <span>SAR</span>
-                            </p> */}
+                                <span>EGP</span>
+                            </p>
+                            <p className="text-zinc-500 text-sm grid grid-cols-2">
+                                <span>{formatNumber(profitPercentage.toFixed(2))}</span>
+                                <span>%</span>
+                            </p>
                         </div>
                     </>
                 )}

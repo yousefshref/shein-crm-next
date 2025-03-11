@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -11,8 +11,9 @@ import { OrdersContextProvider } from '@/context/OrdersContext'
 import { Input } from '../ui/input'
 import { SellersContextProvider } from '@/context/SellersContext'
 import { UserContextProvider } from '@/app/context/UserContext'
+import { BagContextProvider } from '@/context/BagContext'
 
-const OrdersSearchDialog = ({ open, setOpen }) => {
+const OrdersSearchDialog = ({ open, setOpen, page }) => {
     const {
         ordersParams,
         updateOrdersParams,
@@ -20,10 +21,28 @@ const OrdersSearchDialog = ({ open, setOpen }) => {
         getOrders,
     } = useContext(OrdersContextProvider)
 
+    const {
+        getBags,
+        bagParams, updateBagParams
+    } = useContext(BagContextProvider)
+
     // add search fields
     const { sellers } = useContext(SellersContextProvider)
 
     const {is_seller} = useContext(UserContextProvider)
+
+    // select seller
+    // filter bags that its orders has the seller inside it
+    // get the total profit of the bags in total
+    // get the total profit of the seller
+
+    const [pageTitle, setPageTitle] = React.useState("");  
+
+    useEffect(() => {
+        if(page){
+            setPageTitle(page);
+        }
+    }, [page]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -36,7 +55,13 @@ const OrdersSearchDialog = ({ open, setOpen }) => {
                     {is_seller ? null : (
                         <div className='flex flex-col gap-1'>
                             <p className='text-gray-500 text-sm'>Seller</p>
-                            <select value={ordersParams?.sales_id} onChange={(e) => updateOrdersParams('sales_id', e.target.value)} className='input-primary'>
+                            <select value={pageTitle == 'orders' ? ordersParams?.sales_id : bagParams?.seller} onChange={(e) => {
+                                if(page=='orders'){
+                                    updateOrdersParams('sales_id', e.target.value)
+                                }else{
+                                    updateBagParams('seller', e.target.value)
+                                }
+                            }} className='input-primary'>
                                 <option value="">All Sellers</option>
                                 <option value="no">Orders With No Sellers</option>
                                 {sellers?.map((seller) => (
@@ -56,7 +81,12 @@ const OrdersSearchDialog = ({ open, setOpen }) => {
                 </div>
                 <DialogFooter>
                     <Button onClick={() => {
-                        getOrders()
+                        if(page == 'orders'){
+                            getOrders()
+                        }
+                        if(page == 'bags'){
+                            getBags()
+                        }
                         setOpen(false)
                     }} className="me-auto px-7">Done</Button>
                 </DialogFooter>

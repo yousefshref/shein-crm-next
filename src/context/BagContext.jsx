@@ -37,6 +37,8 @@ const BagContext = ({ children }) => {
 
         is_closed: 'false',
 
+        seller: "",
+
         shipping_company: '',
     })
 
@@ -44,6 +46,10 @@ const BagContext = ({ children }) => {
     const updateBagParams = (key, value) => {
         setBagParams({ ...bagParams, [key]: value })
     }
+
+
+    const [bags_profit_egp, setBagsProfitEgp] = React.useState(0)
+    const [orders_profit_egp, setOrdersProfitEgp] = React.useState(0)
 
     const getBags = async () => {
         if (localStorage.getItem('token')) {
@@ -57,7 +63,12 @@ const BagContext = ({ children }) => {
                     params: bagParams
                 })
                 setProgress(50)
-                setBags(res.data)
+                
+                setBags(res.data.bags)
+
+                setBagsProfitEgp(res.data.bags_profit_egp)
+                setOrdersProfitEgp(res.data.orders_profit_egp)
+
             } catch (error) {
                 console.error(error)
                 if (error.response.status === 401) {
@@ -356,6 +367,8 @@ const BagContext = ({ children }) => {
             bagParams, setBagParams, updateBagParams,
             getBags,
 
+            bags_profit_egp, setBagsProfitEgp,
+            orders_profit_egp, setOrdersProfitEgp,
 
             bagDetails, setBagDetails,
             ordersDetails, setOrdersDetails, addNewOrderDetails,
