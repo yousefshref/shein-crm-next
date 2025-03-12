@@ -45,6 +45,7 @@ const OrdersContext = ({ children }) => {
         setOrdersParams({ ...ordersParams, [key]: value })
     }
 
+    const [all_orders_with_no_seller, set_all_orders_with_no_seller] = React.useState([])
     const getOrders = async () => {
         setLoading(true)
         try {
@@ -54,7 +55,8 @@ const OrdersContext = ({ children }) => {
                     Authorization: `Token ${localStorage.getItem('token')}`
                 }
             })
-            setOrders(res.data)
+            setOrders(res.data.orders)
+            set_all_orders_with_no_seller(res.data.all_orders_with_no_seller)
         } catch (error) {
             alert(error.response.status)
             console.error(error)
@@ -321,6 +323,7 @@ const OrdersContext = ({ children }) => {
             orders,
             ordersParams, setOrdersParams,
             updateOrdersParams,
+            all_orders_with_no_seller,
             getOrders,
 
             getOrder,

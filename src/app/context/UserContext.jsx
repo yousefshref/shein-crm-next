@@ -27,6 +27,9 @@ const UserContext = ({ children }) => {
                     window.location.href = '/login'
                 }
             }
+        }else{
+            localStorage.removeItem('token')
+            window.location.href = '/login'
         }
     }
 

@@ -44,7 +44,8 @@ const OrdersSection = ({ page, setPage }) => {
         ordersParams, 
         loading, progress, open, setOpen, 
         orders, setOrders, getOrders, 
-        fastUpdateOrder, setIsDelivered, updateOrder 
+        fastUpdateOrder, setIsDelivered, updateOrder,
+        all_orders_with_no_seller
     } =
         useContext(OrdersContextProvider);
 
@@ -67,6 +68,22 @@ const OrdersSection = ({ page, setPage }) => {
     const {setBag,  getBag} = useContext(BagContextProvider)
     const [order, setOrder] = useState(null);
 
+
+
+    const [sellerPercentage, setSellerPercentage] = useState(0);
+
+    useEffect(() => {
+        const allOrdersTotal = all_orders_with_no_seller?.map(order => order?.pieces)
+            ?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0;
+
+        const sellerOrdersTotal = orders?.map(order => order?.pieces)
+            ?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0) || 0;
+
+        if (allOrdersTotal && sellerOrdersTotal) {
+            const percentage = (sellerOrdersTotal / allOrdersTotal) * 100;
+            setSellerPercentage(percentage);
+        }
+    }, [orders, all_orders_with_no_seller]);
 
     return (
         <div
@@ -112,6 +129,16 @@ const OrdersSection = ({ page, setPage }) => {
                     <>
                         <div className="col-span-1 flex flex-col">
                             <p className="text-[#6C85FF]">Total Orders Sales</p>
+                                    {all_orders_with_no_seller ? (
+                                        <p className="text-zinc-500 text-sm mt-1 grid grid-cols-2">
+                                            <span>
+                                                {formatNumber(
+                                                    all_orders_with_no_seller?.map((order) => order?.pieces)?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_egp), 0)
+                                                )}
+                                            </span>
+                                            <span>EGP</span>
+                                        </p>
+                                    ) : null}
                             <p className="text-zinc-500 text-sm mt-1 grid grid-cols-2">
                                 <span>
                                     {formatNumber(
@@ -120,14 +147,14 @@ const OrdersSection = ({ page, setPage }) => {
                                 </span>
                                 <span>EGP</span>
                             </p>
-                            <p className="text-zinc-500 text-sm grid grid-cols-2">
-                                <span>
-                                    {formatNumber(
-                                        orders?.map((order) => order?.pieces)?.flat().reduce((total, orderPiece) => total + Number(orderPiece?.price_in_sar), 0)
-                                    )}
-                                </span>
-                                <span>SAR</span>
-                            </p>
+                            {all_orders_with_no_seller ? (
+                                <p className="text-zinc-500 text-sm mt-1 grid grid-cols-2">
+                                    <span>
+                                        {sellerPercentage.toFixed(2)}
+                                    </span>
+                                    <span>%</span>
+                                </p>
+                            ) : null}
                         </div>
                     </>
                 )}

@@ -7,7 +7,11 @@ import BagsSection from "@/components/Bag/BagsSection";
 import OrdersSection from "@/components/Order/OrdersSection";
 
 export default function Home() {
-  const { user } = useContext(UserContextProvider);
+  const { user, getUser } = useContext(UserContextProvider);
+
+  useEffect(() => {
+    getUser()
+  }, [])
 
   useEffect(() => {
     if (!user) {

@@ -144,6 +144,10 @@ const ChartsComponent = ({ open, setOpen }) => {
                 setSellers(res.data)
             } catch (error) {
                 console.error(error)
+                if(error.response.status == 401) {
+                    window.location.href = '/login'
+                    localStorage.removeItem('token')
+                }
             }
         }
         getSellers()
