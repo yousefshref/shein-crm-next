@@ -35,17 +35,15 @@ const SearchSection = ({
                 <CalendarDialog page={page} open={openCalendar} setOpen={setOpenCalendar} />
             </>
 
-            {page == 'orders' ? (
-                <>
-                    <div
-                        onClick={() => setOpenSearch(true)}
-                        className="p-2 bg-[#6C85FF] cursor-pointer transition-all duration-300 hover:bg-[#788fff] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
-                    >
-                        <Search className="w-full" />
-                    </div>
-                    <OrdersSearchDialog open={openSearch} setOpen={setOpenSearch} />
-                </>
-            ) : null}
+            <>
+                <div
+                    onClick={() => setOpenSearch(true)}
+                    className="p-2 bg-[#6C85FF] cursor-pointer transition-all duration-300 hover:bg-[#788fff] w-[40px] h-[40px] rounded-full text-white flex flex-col justify-center items-center"
+                >
+                    <Search className="w-full" />
+                </div>
+                <OrdersSearchDialog page={page} open={openSearch} setOpen={setOpenSearch} />
+            </>
 
             {page == 'bags' ? (
                 <>
